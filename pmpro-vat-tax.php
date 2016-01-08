@@ -135,6 +135,9 @@ function pmprovat_init()
 							"SE"  => "Sweden",
 							"UK"  => "United Kingdom"    
 						    );
+	
+	add_action( 'wp_ajax_nopriv_pmprovat_vat_verification_ajax_callback', 'pmprovat_vat_verification_ajax_callback' );
+	add_action( 'wp_ajax_pmprovat_vat_verification_ajax_callback', 'pmprovat_vat_verification_ajax_callback' );	
 }
 
 add_action("init", "pmprovat_init");
@@ -336,14 +339,6 @@ function pmprovat_verify_vat_number($country, $vat_number)
 	
 	return $result;
 }
-
-function myinit()
-{
-	add_action( 'wp_ajax_nopriv_pmprovat_vat_verification_ajax_callback', 'pmprovat_vat_verification_ajax_callback' );
-	add_action( 'wp_ajax_pmprovat_vat_verification_ajax_callback', 'pmprovat_vat_verification_ajax_callback' );
-}
-
-add_action('init', 'myinit');
 
 //Check self identified country with billing address country and verify VAT number
 function pmprovat_check_vat_fields_submission($value)
