@@ -2,14 +2,14 @@
 /*
 Plugin Name: Paid Memberships Pro - VAT Tax
 Plugin URI: http://www.paidmembershipspro.com/wp/pmpro-vat-tax/
-Description: Calculate VAT tax at checkout and allow customers with a VAT Number to avoid the tax.
+Description: Calculate VAT tax at checkout and allow customers with a VAT Number lookup for VAT tax exemptions in EU countries.
 Version: .1
 Author: Stranger Studios
 Author URI: http://www.strangerstudios.com
 */
 
 //uses: https://github.com/herdani/vat-validation/blob/master/vatValidation.class.php
-//For VAT number checking.
+//For EU VAT number checking.
 
 function pmprovat_pmpro_tax($tax, $values, $order)
 {  	
@@ -30,16 +30,32 @@ function pmprovat_pmpro_tax($tax, $values, $order)
 	
 	$vat_rate = 0;
 	
+	//They didn't use the AJAX verify. Either they don't have a VAT number or
+	//entered it didn't use it.
 	if(!$vat_number_verified)
 	{
+		//they didn't use AJAX verify. Verify them now.
 		if(!empty($vat_number) && pmprovat_verify_vat_number($bcountry, $vat_number))
 		{	
 			$vat_rate = 0;	
 		}
 		
+		//they don't have a VAT number.
 		elseif(array_key_exists($values['billing_country'], $pmpro_vat_by_country))
 		{
-			$vat_rate = $pmpro_vat_by_country[$values['billing_country']];
+			//state VAT like British Columbia Canada
+			if(is_array($pmpro_vat_by_country[$values['billing_country']]))
+			{
+				$state = $_REQUEST['bstate'];
+				
+				if(array_key_exists($state, $pmpro_vat_by_country[$values['billing_country']]))
+				{
+					$vat_rate = $pmpro_vat_by_country[$values['billing_country']][$state];
+				}
+			}
+			
+			else
+				$vat_rate = $pmpro_vat_by_country[$values['billing_country']];
 		}
 	}
 
@@ -48,17 +64,12 @@ function pmprovat_pmpro_tax($tax, $values, $order)
 	return $tax;
 }
 
-//create a vat global
 function pmprovat_init()
 {
-	//add_filter('pmprovat_custom_vat_number_validate', '__return_true');
-	//add_filter('pmprovat_custom_vat_number_validate', '__return_false');
-
 	if(!class_exists("vatValidation"))
 	{
 		require_once(dirname(__FILE__) . "/includes/vatValidation.class.php");
 	}
-	
 	
 	global $pmpro_vat_by_country;
 	
@@ -90,42 +101,73 @@ function pmprovat_init()
 	"SK" => 0.20,
 	"FI" => 0.24,
 	"SE" => 0.25,
-	"GB" => 0.20,
+	"UK" => 0.20,
+	"CA" => array("BC" => 0.05)
 );
-	
     	//Identify EU countries
 	global $pmpro_european_union;
-	$pmpro_european_union = array("FR" => "France", "IT" => "Italy");
-	
-	global $vatValidation;
-	$vatValidation= new vatValidation( array('debug' => false));
+	$pmpro_european_union = array(""	 => "",
+							"BE"  => "Belgium",
+							"BG"  => "Bulgaria",
+							"CZ"  => "Czech Republic",
+							"DK"  => "Denmark",
+							"DE"  => "Germany",
+							"EE"  => "Estonia",
+							"IE"  => "Ireland",
+							"EL"  => "Greece",
+							"ES"  => "Spain",
+							"FR"  => "France",
+							"IT"  => "Italy",
+							"CY"  => "Cyprus",
+							"LV"  => "Latvia",
+							"LT"  => "Lithuania",
+							"LU"  => "Luxembourg",
+							"HU"  => "Hungary",
+							"MT"  => "Malta",
+							"NL"  => "Netherlands",
+							"AT"  => "Austria",
+							"PL"  => "Poland",
+							"PT"  => "Portugal",
+							"RO"  => "Romania",
+							"SI"  => "Slovenia",
+							"SK"  => "Slovakia",
+							"FI"  => "Finland",
+							"SE"  => "Sweden",
+							"UK"  => "United Kingdom"    
+						    );
 }
 
 add_action("init", "pmprovat_init");
 
+function pmprovat_get_VAT_validation()
+{
+	global $vatValidation;
+	if(empty($vatValidation))
+	{
+		$vatValidation = new vatValidation(array('debug' => false));
+	}
+	
+	return $vatValidation;
+}
+
+
 function pmprovat_pmpro_level_cost_text($cost, $level)
 {
-	//only applicable for levels > 1
 	$cost .= " Members in the EU will be charged a VAT tax.";
 	
 	return $cost;
 }
 add_filter("pmpro_level_cost_text", "pmprovat_pmpro_level_cost_text", 10, 2);
  
-//add selectbox
 function pmprovat_pmpro_checkout_boxes()
 {	
-	global $pmpro_european_union;
-
-//Add this section with jQuery check if its a VAT country and add this section
-?>
-
+	global $pmpro_european_union;?>
 
 <table id="pmpro_vat_table" class="pmpro_checkout" width="100%" cellpadding="0" cellspacing="0" border="0">
 <thead>
 	<tr>
 		<th>
-			European Union Residents
+			European Union Residents VAT
 		</th>
 	</tr>
 </thead>
@@ -136,7 +178,8 @@ function pmprovat_pmpro_checkout_boxes()
 				<?php
 				//Add section below if billing address is from EU country
 				?>
-				<label for="eucountry"><?php _e('Country', 'pmpro');?></label>
+				<div id="eu_self_id_instructions">EU customers must confirm country of residence for VAT.</div>
+				<label for="eucountry"><?php _e('Country of Residence', 'pmpro');?></label>
 					<select name="eucountry" class=" <?php echo pmpro_getClassForField("eucountry");?>">
 						<?php
 							foreach($pmpro_european_union as $abbr => $country)
@@ -214,11 +257,14 @@ jQuery(document).ready(function(){
 						},
 					success: function(responseHTML)
 					{
-						alert("VAT Number was verified");
 						if(responseHTML.trim() == 'true')
 						{
+							//alert("VAT Number was verified");
 							//print message
-						
+							jQuery('#pmpro_message').show();
+							jQuery('#pmpro_message').addClass('pmpro_success');
+							jQuery('#pmpro_message').html('VAT number was verifed');
+
 							jQuery('<input>').attr({
 								type: 'hidden',
 								id: 'vat_number_verified',
@@ -228,7 +274,10 @@ jQuery(document).ready(function(){
 						}
 						else
 						{
-							alert("VAT Number could not be verified. Please reenter");
+							jQuery('#pmpro_message').show();
+							jQuery('#pmpro_message').removeClass('pmpro_success');
+							jQuery('#pmpro_message').addClass('pmpro_error');
+							jQuery('#pmpro_message').html('VAT number was not verifed. Please try again.');
 						}
 					}
 				});
@@ -252,15 +301,13 @@ jQuery(document).ready(function(){
 </script>
 <?php
 }
-add_action("pmpro_checkout_boxes", "pmprovat_pmpro_checkout_boxes");
+add_action("pmpro_checkout_after_billing_fields", "pmprovat_pmpro_checkout_boxes");
 
 function pmprovat_vat_verification_ajax_callback()
 {
 	$vat_number = $_REQUEST['vat_number'];
 	$country = $_REQUEST['country'];
-	
-	global $vatValidation;
-	
+		
 	$result = pmprovat_verify_vat_number($country, $vat_number);
 	
 	if($result)
@@ -273,7 +320,7 @@ function pmprovat_vat_verification_ajax_callback()
 
 function pmprovat_verify_vat_number($country, $vat_number)
 {
-	global $vatValidation;
+	$vatValidation = pmprovat_get_VAT_validation();
 	
 	if(empty($country) || empty($vat_number))
 	{
@@ -298,9 +345,8 @@ function myinit()
 
 add_action('init', 'myinit');
 
-
-//Check self identified country with billing address country
-function pmprovat_check_country_residence($value)
+//Check self identified country with billing address country and verify VAT number
+function pmprovat_check_vat_fields_submission($value)
 {
 	global $pmpro_european_union, $pmpro_msg, $pmpro_msgt;
 	
@@ -331,17 +377,15 @@ function pmprovat_check_country_residence($value)
 	
 	if($show_vat && !pmprovat_verify_vat_number($bcountry, $vat_number))
 	{
-		$pmpro_msg = "Your VAT number didn't verify";
+		$pmpro_msg = "VAT number was not verifed. Please try again.";
 		$pmpro_msgt = "pmpro_error";
 		$value = false;
 	}
 
-	//use this filter to create customized checks such as IP Geolocation
-	//return apply_filters("pmprovat_custom_residence_check", $value, $bcountry);
 	return $value;
 }
 
-add_filter("pmpro_registration_checks", "pmprovat_check_country_residence");
+add_filter("pmpro_registration_checks", "pmprovat_check_vat_fields_submission");
 
 //update tax calculation if buyer is in EU or other states that charge VAT
 function pmprovat_region_tax_check()
@@ -365,18 +409,7 @@ function pmprovat_region_tax_check()
 	}
 	else
 	{
-		//check state and country
-		if(!empty($_REQUEST['bstate']) && !empty($_REQUEST['bcountry']))
-		{
-			$bstate = trim(strtoupper($_REQUEST['bstate']));
-			$bcountry = trim(strtoupper($_REQUEST['bcountry']));
-			
-			if(($bstate == "bc" || $bstate == "british columbia") && $bcountry = "ca")
-			{
-				//billing address is in BC
-				add_filter("pmpro_tax", "pmprovat_pmpro_tax", 10, 3);
-			}
-		}
+		add_filter("pmpro_tax", "pmprovat_pmpro_tax", 10, 3);
 	}
 }
 add_action("init", "pmprovat_region_tax_check");
