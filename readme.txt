@@ -2,7 +2,7 @@
 Contributors: strangerstudios
 Tags: paid memberships pro, pmpro, tax, vat, eu
 Requires at least: 3.5
-Tested up to: 4.1
+Tested up to: 4.4.1
 Stable tag: .1
 
 Calculate VAT tax at checkout and allow customers with a VAT Number to avoid the tax.
