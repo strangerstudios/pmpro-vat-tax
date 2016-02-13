@@ -198,6 +198,10 @@ function pmprovat_pmpro_checkout_boxes()
 			<div>
 				<?php
 				//Add section below if billing address is from EU country
+				if(!empty($_REQUEST['eucountry']))
+					$eucountry = $_REQUEST['eucountry'];
+				else
+					$eucountry = "";
 				?>
 				<div id="eu_self_id_instructions"><?php _e('EU customers must confirm country of residence for VAT.', 'pmprovat');?></div>
 				<label for="eucountry"><?php _e('Country of Residence', 'pmpro');?></label>
@@ -205,7 +209,7 @@ function pmprovat_pmpro_checkout_boxes()
 						<?php
 							foreach($pmpro_european_union as $abbr => $country)
 							{?>
-								<option value="<?php echo $abbr?>"><?php echo $country?></option><?php
+								<option value="<?php echo $abbr?>" <?php selected($eucountry, $abbr);?>><?php echo $country?></option><?php
 							}
 						?>
 					</select>
@@ -263,11 +267,18 @@ function pmprovat_check_vat_fields_submission($value)
 {
 	global $pmpro_european_union, $pmpro_msg, $pmpro_msgt;
 	
-	$bcountry = $_REQUEST['bcountry'];
-	$eucountry = $_REQUEST['eucountry'];
+	if(!empty($_REQUEST['bcountry']))
+		$bcountry = $_REQUEST['bcountry'];
+	else
+		$bcountry = "";
+	
+	if(!empty($_REQUEST['eucountry']))
+		$eucountry = $_REQUEST['eucountry'];
+	else
+		$eucountry = "";
 	
 	//only if billing country is an EU country
-	if(array_key_exists($bcountry, $pmpro_european_union))
+	if(!empty($bcountry) && array_key_exists($bcountry, $pmpro_european_union))
 	{
 		if($bcountry !== $eucountry)
 		{
@@ -283,7 +294,7 @@ function pmprovat_check_vat_fields_submission($value)
 	
 	$vat_number = $_REQUEST['vat_number'];
 	
-	if($_REQUEST['show_vat'] == 1)
+	if(!empty($_REQUEST['show_vat']))
 		$show_vat = 1;
 	else
 		$show_vat = 0;
@@ -335,46 +346,54 @@ add_action("init", "pmprovat_region_tax_check");
 function pmprovat_pmpro_tax($tax, $values, $order)
 {  	
 	global $pmpro_vat_by_country;
+		
+	if(!empty($_REQUEST['vat_number']))
+		$vat_number = $_REQUEST['vat_number'];
+	else
+		$vat_number = "";
+		
+	if(!empty($_REQUEST['eucountry']))
+		$eucountry = $_REQUEST['eucountry'];
+	else
+		$eucountry = "";
 	
-	$vat_number = $_REQUEST['vat_number'];
-	$bcountry = $_REQUEST['bcountry'];
-	
-	if($_REQUEST['show_vat'] == 1)
+	if(!empty($_REQUEST['show_vat']))
 		$show_vat = 1;
 	else
 		$show_vat = 0;
 	
-	if($_REQUEST['vat_number_verified'] == "1")
+	if(!empty($_REQUEST['vat_number_verified']) && $_REQUEST['vat_number_verified'] == "1")
 		$vat_number_verified = true;
 	else
 		$vat_number_verified = false;
 	
 	$vat_rate = 0;
-	
+		
 	//They didn't use the AJAX verify. Either they don't have a VAT number or
 	//entered it didn't use it.
 	if(!$vat_number_verified)
 	{
 		//they didn't use AJAX verify. Verify them now.
-		if(!empty($vat_number) && pmprovat_verify_vat_number($bcountry, $vat_number))
-		{	
-			$vat_rate = 0;	
+		if(!empty($vat_number) && !empty($eucountry) && pmprovat_verify_vat_number($eucountry, $vat_number))
+		{
+			$vat_rate = 0;
 		}
-		
 		//they don't have a VAT number.
-		elseif(array_key_exists($values['billing_country'], $pmpro_vat_by_country))
+		elseif(!empty($values['billing_country']) && array_key_exists($values['billing_country'], $pmpro_vat_by_country))
 		{
 			//state VAT like British Columbia Canada
 			if(is_array($pmpro_vat_by_country[$values['billing_country']]))
 			{
-				$state = $_REQUEST['bstate'];
+				if(!empty($_REQUEST['bstate']))
+					$state = $_REQUEST['bstate'];
+				else
+					$state = "";
 				
-				if(array_key_exists($state, $pmpro_vat_by_country[$values['billing_country']]))
+				if(!empty($state) && array_key_exists($state, $pmpro_vat_by_country[$values['billing_country']]))
 				{
 					$vat_rate = $pmpro_vat_by_country[$values['billing_country']][$state];
 				}
-			}
-			
+			}			
 			else
 				$vat_rate = $pmpro_vat_by_country[$values['billing_country']];
 		}
