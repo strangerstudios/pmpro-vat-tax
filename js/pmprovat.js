@@ -3,7 +3,7 @@ jQuery(document).ready(function(){
 		var country = jQuery('select[name="bcountry"] option:selected').val();		
 		var showHideVATTable;
 		showHideVATTable = jQuery.inArray(country, pmprovat.eu_array);
-		
+				
 		if(showHideVATTable > -1)
 		{
 			jQuery('#pmpro_vat_table').show();
