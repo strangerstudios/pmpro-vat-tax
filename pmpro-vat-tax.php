@@ -57,7 +57,8 @@ function pmprovat_init()
     
 	//Identify EU countries
 	global $pmpro_european_union;
-	$pmpro_european_union = array(""	 => "",
+	$pmpro_european_union = array(""	 => "- Choose One -",
+							"NOTEU" => "Non-EU Resident",
 							"BE"  => "Belgium",
 							"BG"  => "Bulgaria",
 							"CZ"  => "Czech Republic",
