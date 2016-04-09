@@ -3,7 +3,7 @@
 Plugin Name: Paid Memberships Pro - VAT Tax
 Plugin URI: http://www.paidmembershipspro.com/wp/pmpro-vat-tax/
 Description: Calculate VAT tax at checkout and allow customers with a VAT Number lookup for VAT tax exemptions in EU countries.
-Version: .1.1
+Version: .2
 Author: Stranger Studios
 Author URI: http://www.strangerstudios.com
 */
@@ -172,7 +172,9 @@ function pmprovat_verify_vat_number($country, $vat_number)
  */
 function pmprovat_pmpro_level_cost_text($cost, $level)
 {
-	$cost .= __(" Members in the EU will be charged a VAT tax.", "pmprovat");
+	global $pmpro_pages;
+	if( is_page( $pmpro_pages["checkout"] ) )
+		$cost .= " " . __("Members in the EU will be charged a VAT tax.", "pmprovat");
 	
 	return $cost;
 }
@@ -206,7 +208,7 @@ function pmprovat_pmpro_checkout_boxes()
 				?>
 				<div id="eu_self_id_instructions"><?php _e('EU customers must confirm country of residence for VAT.', 'pmprovat');?></div>
 				<label for="eucountry"><?php _e('Country of Residence', 'pmpro');?></label>
-					<select name="eucountry" class=" <?php echo pmpro_getClassForField("eucountry");?>">
+					<select id="eucountry" name="eucountry" class=" <?php echo pmpro_getClassForField("eucountry");?>">
 						<?php
 							foreach($pmpro_european_union as $abbr => $country)
 							{?>
@@ -347,7 +349,7 @@ add_action("init", "pmprovat_region_tax_check");
 function pmprovat_pmpro_tax($tax, $values, $order)
 {  	
 	global $pmpro_vat_by_country;
-		
+
 	if(!empty($_REQUEST['vat_number']))
 		$vat_number = $_REQUEST['vat_number'];
 	else
@@ -355,6 +357,8 @@ function pmprovat_pmpro_tax($tax, $values, $order)
 		
 	if(!empty($_REQUEST['eucountry']))
 		$eucountry = $_REQUEST['eucountry'];
+	elseif(!empty($values['billing_country']))
+		$eucountry = $values['billing_country'];
 	else
 		$eucountry = "";
 	
@@ -369,7 +373,7 @@ function pmprovat_pmpro_tax($tax, $values, $order)
 		$vat_number_verified = false;
 	
 	$vat_rate = 0;
-		
+
 	//They didn't use the AJAX verify. Either they don't have a VAT number or
 	//entered it didn't use it.
 	if(!$vat_number_verified)
@@ -380,10 +384,10 @@ function pmprovat_pmpro_tax($tax, $values, $order)
 			$vat_rate = 0;
 		}
 		//they don't have a VAT number.
-		elseif(!empty($values['billing_country']) && array_key_exists($values['billing_country'], $pmpro_vat_by_country))
+		elseif(!empty($eucountry) && array_key_exists($eucountry, $pmpro_vat_by_country))
 		{
 			//state VAT like British Columbia Canada
-			if(is_array($pmpro_vat_by_country[$values['billing_country']]))
+			if(is_array($pmpro_vat_by_country[$eucountry]))
 			{
 				if(!empty($_REQUEST['bstate']))
 					$state = $_REQUEST['bstate'];
@@ -396,12 +400,13 @@ function pmprovat_pmpro_tax($tax, $values, $order)
 				}
 			}			
 			else
-				$vat_rate = $pmpro_vat_by_country[$values['billing_country']];
+				$vat_rate = $pmpro_vat_by_country[$eucountry];
 		}
 	}
 
-	$tax = round((float)$values['price'] * $vat_rate, 2);
-	
+	if(!empty($vat_rate))
+		$tax = $tax + round((float)$values['price'] * $vat_rate, 2);
+
 	return $tax;
 }
 

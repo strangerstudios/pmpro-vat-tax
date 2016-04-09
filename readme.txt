@@ -2,8 +2,8 @@
 Contributors: strangerstudios
 Tags: paid memberships pro, pmpro, tax, vat, eu
 Requires at least: 3.5
-Tested up to: 4.4.2
-Stable tag: .1.1
+Tested up to: 4.5
+Stable tag: .2
 
 Calculate VAT tax at checkout and allow customers with a VAT Number to avoid the tax.
 
@@ -32,6 +32,9 @@ For immediate help, also post to our premium support site at http://www.paidmemb
 Please visit our premium support site at http://www.paidmembershipspro.com for more documentation and our support forums.
 
 == Changelog ==
+= .2 =
+* BUG: Fixed bug where VAT was not applied if only a country of residence was chosen vs having the billing country set.
+* ENHANCEMENT: Now setting the country of residence to the billing address if the country of residence is blank when the billing address is changed.
 
 = .1.1 =
 * BUG: Fixed warnings and issues when $bcountry was not available.

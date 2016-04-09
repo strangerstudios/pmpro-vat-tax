@@ -8,7 +8,8 @@ jQuery(document).ready(function(){
 		{
 			jQuery('#pmpro_vat_table').show();
 			jQuery('#vat_number_validation_tr').hide();
-			jQuery('#pmpro_vat_table').focus();
+			if(jQuery('#eucountry').val() == '' && jQuery('select[name=bcountry]').val() != '')
+				jQuery('#eucountry').val(jQuery('select[name=bcountry]').val());
 		}
 		else
 		{
