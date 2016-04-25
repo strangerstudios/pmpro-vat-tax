@@ -1,0 +1,187 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: pmprovat\n"
+"Last-Translator: Álvaro Martínez Majado <a@alvaro.cat>\n"
+"Language-Team: \n"
+"Language: ca\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 1.8.7\n"
+"X-Poedit-Basepath: ..\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Poedit-KeywordsList: __;_e\n"
+"X-Poedit-SearchPath-0: .\n"
+"X-Poedit-SearchPathExcluded-0: languages\n"
+
+#: pmpro-vat-tax.php:75
+msgid "- Choose One -"
+msgstr "- Trieu-ne un - "
+
+#: pmpro-vat-tax.php:76
+msgid "Non-EU Resident"
+msgstr "No resident a la UE"
+
+#: pmpro-vat-tax.php:77
+msgid "Belgium"
+msgstr "Bèlgica"
+
+#: pmpro-vat-tax.php:78
+msgid "Bulgaria"
+msgstr "Bulgària"
+
+#: pmpro-vat-tax.php:79
+msgid "Czech Republic"
+msgstr "República Txeca"
+
+#: pmpro-vat-tax.php:80
+msgid "Denmark"
+msgstr "Dinamarca"
+
+#: pmpro-vat-tax.php:81
+msgid "Germany"
+msgstr "Alemanya"
+
+#: pmpro-vat-tax.php:82
+msgid "Estonia"
+msgstr "Estònia"
+
+#: pmpro-vat-tax.php:83
+msgid "Ireland"
+msgstr "Irlanda"
+
+#: pmpro-vat-tax.php:84
+msgid "Greece"
+msgstr "Grècia"
+
+#: pmpro-vat-tax.php:85
+msgid "Spain"
+msgstr "Espanya"
+
+#: pmpro-vat-tax.php:86
+msgid "France"
+msgstr "França"
+
+#: pmpro-vat-tax.php:87
+msgid "Italy"
+msgstr "Itàlia"
+
+#: pmpro-vat-tax.php:88
+msgid "Cyprus"
+msgstr "Xipre"
+
+#: pmpro-vat-tax.php:89
+msgid "Latvia"
+msgstr "Letònia"
+
+#: pmpro-vat-tax.php:90
+msgid "Lithuania"
+msgstr "Lituània"
+
+#: pmpro-vat-tax.php:91
+msgid "Luxembourg"
+msgstr "Luxemburg"
+
+#: pmpro-vat-tax.php:92
+msgid "Hungary"
+msgstr "Hungria"
+
+#: pmpro-vat-tax.php:93
+msgid "Malta"
+msgstr "Malta"
+
+#: pmpro-vat-tax.php:94
+msgid "Netherlands"
+msgstr "Països Baixos"
+
+#: pmpro-vat-tax.php:95
+msgid "Austria"
+msgstr "Àustria"
+
+#: pmpro-vat-tax.php:96
+msgid "Poland"
+msgstr "Polònia"
+
+#: pmpro-vat-tax.php:97
+msgid "Portugal"
+msgstr "Portugal"
+
+#: pmpro-vat-tax.php:98
+msgid "Romania"
+msgstr "Romania"
+
+#: pmpro-vat-tax.php:99
+msgid "Slovenia"
+msgstr "Eslovènia"
+
+#: pmpro-vat-tax.php:100
+msgid "Slovakia"
+msgstr "Eslovàquia"
+
+#: pmpro-vat-tax.php:101
+msgid "Finland"
+msgstr "Finlàndia"
+
+#: pmpro-vat-tax.php:102
+msgid "Sweden"
+msgstr "Suècia"
+
+#: pmpro-vat-tax.php:103
+msgid "United Kingdom"
+msgstr "Regne Unit"
+
+#: pmpro-vat-tax.php:192
+msgid "Members in the EU will be charged a VAT tax."
+msgstr "Els consumidors de la Unió Europea han de pagar IVA."
+
+#: pmpro-vat-tax.php:209
+msgid "European Union Residents VAT"
+msgstr "IVA per a residents a la Unió Europea"
+
+#: pmpro-vat-tax.php:224
+msgid "EU customers must confirm country of residence for VAT."
+msgstr ""
+"Els consumidors de la UE han de confirmar el seu país de residència per a "
+"l’IVA"
+
+#: pmpro-vat-tax.php:225
+msgid "Country of Residence"
+msgstr "País de residència"
+
+#: pmpro-vat-tax.php:243
+msgid "I have a VAT number"
+msgstr "Disposo d’un número d’IVA intercomunitari"
+
+#: pmpro-vat-tax.php:250
+msgid "Vat Number"
+msgstr "Número d’IVA"
+
+#: pmpro-vat-tax.php:252
+msgid "Apply"
+msgstr "Aplica"
+
+#: pmpro-vat-tax.php:303
+msgid "Billing country and country self identification must match"
+msgstr ""
+"El país que ha de constar en la factura i l’autoidentificació han de "
+"coincidir"
+
+#: pmpro-vat-tax.php:322
+msgid "VAT number was not verifed. Please try again."
+msgstr "El número d’IVA no s’ha verificat. Si us plau, torni-ho a intentar."
+
+#: pmpro-vat-tax.php:445
+msgid "View Documentation"
+msgstr "Mostra la documentació"
+
+#: pmpro-vat-tax.php:445
+msgid "Docs"
+msgstr "Docs"
+
+#: pmpro-vat-tax.php:446
+msgid "Visit Customer Support Forum"
+msgstr "Visiteu el fòrum d’ajuda"
+
+#: pmpro-vat-tax.php:446
+msgid "Support"
+msgstr "Ajuda"
