@@ -6,18 +6,33 @@ Description: Calculate VAT tax at checkout and allow customers with a VAT Number
 Version: .2
 Author: Stranger Studios
 Author URI: http://www.strangerstudios.com
+Text Domain: pmprovat
 */
 
 //uses: https://github.com/herdani/vat-validation/blob/master/vatValidation.class.php
 //For EU VAT number checking.
 
 /**
+ * Load plugin textdomain.
+ */
+function pmprovat_load_textdomain() {
+	$domain = 'pmprovat';
+	$locale = apply_filters( 'plugin_locale', get_locale(), $domain );
+
+	load_textdomain( $domain ,  WP_LANG_DIR.'/pmpro-vat-tax/'.$domain.'-'.$locale.'.mo' );
+	load_plugin_textdomain( $domain , FALSE ,  dirname(plugin_basename(__FILE__)). '/languages/' );
+}
+
+add_action( 'plugins_loaded', 'pmprovat_load_textdomain' );
+
+
+/**
  * Setup required classes and global variables.
  */
 function pmprovat_init()
-{	
+{
 	global $pmpro_vat_by_country;
-	
+
 	$pmpro_vat_by_country = array(
 		"BE" => 0.21,
 		"BG" => 0.20,
@@ -49,50 +64,50 @@ function pmprovat_init()
 		"UK" => 0.20,
 		"CA" => array("BC" => 0.05)
 	);
-	
+
 	/**
 	 * Filter to add or filter vat taxes by country
 	 */
 	$pmpro_vat_by_country = apply_filters('pmpro_vat_by_country', $pmpro_vat_by_country);
-    
+
 	//Identify EU countries
 	global $pmpro_european_union;
-	$pmpro_european_union = array(""	 => "- Choose One -",
-							"NOTEU" => "Non-EU Resident",
-							"BE"  => "Belgium",
-							"BG"  => "Bulgaria",
-							"CZ"  => "Czech Republic",
-							"DK"  => "Denmark",
-							"DE"  => "Germany",
-							"EE"  => "Estonia",
-							"IE"  => "Ireland",
-							"EL"  => "Greece",
-							"ES"  => "Spain",
-							"FR"  => "France",
-							"IT"  => "Italy",
-							"CY"  => "Cyprus",
-							"LV"  => "Latvia",
-							"LT"  => "Lithuania",
-							"LU"  => "Luxembourg",
-							"HU"  => "Hungary",
-							"MT"  => "Malta",
-							"NL"  => "Netherlands",
-							"AT"  => "Austria",
-							"PL"  => "Poland",
-							"PT"  => "Portugal",
-							"RO"  => "Romania",
-							"SI"  => "Slovenia",
-							"SK"  => "Slovakia",
-							"FI"  => "Finland",
-							"SE"  => "Sweden",
-							"UK"  => "United Kingdom"    
+	$pmpro_european_union = array(""	 => __( "- Choose One -" , 'pmprovat' ),
+							"NOTEU" => __( "Non-EU Resident" , 'pmprovat' ),
+							"BE"  => __( "Belgium" , 'pmprovat' ),
+							"BG"  => __( "Bulgaria" , 'pmprovat' ),
+							"CZ"  => __( "Czech Republic", 'pmprovat' ),
+							"DK"  => __( "Denmark" , 'pmprovat' ),
+							"DE"  => __( "Germany" , 'pmprovat' ),
+							"EE"  => __( "Estonia" , 'pmprovat' ),
+							"IE"  => __( "Ireland" , 'pmprovat' ),
+							"EL"  => __( "Greece" , 'pmprovat' ),
+							"ES"  => __( "Spain" , 'pmprovat' ),
+							"FR"  => __( "France" , 'pmprovat' ),
+							"IT"  => __( "Italy" , 'pmprovat' ),
+							"CY"  => __( "Cyprus" , 'pmprovat' ),
+							"LV"  => __( "Latvia" , 'pmprovat' ),
+							"LT"  => __( "Lithuania" , 'pmprovat' ),
+							"LU"  => __( "Luxembourg" , 'pmprovat' ),
+							"HU"  => __( "Hungary" , 'pmprovat' ),
+							"MT"  => __( "Malta" , 'pmprovat' ),
+							"NL"  => __( "Netherlands" , 'pmprovat' ),
+							"AT"  => __( "Austria" , 'pmprovat' ),
+							"PL"  => __( "Poland" , 'pmprovat' ),
+							"PT"  => __( "Portugal" , 'pmprovat' ),
+							"RO"  => __( "Romania" , 'pmprovat' ),
+							"SI"  => __( "Slovenia" , 'pmprovat' ),
+							"SK"  => __( "Slovakia" , 'pmprovat' ),
+							"FI"  => __( "Finland" , 'pmprovat' ),
+							"SE"  => __( "Sweden" , 'pmprovat' ),
+							"UK"  => __( "United Kingdom", 'pmprovat' )
 						    );
-	
+
 	/**
 	 * Filter to add/edit EU countries
 	 */
 	$pmpro_european_union = apply_filters('pmpro_european_union', $pmpro_european_union);
-	
+
 	add_action( 'wp_ajax_nopriv_pmprovat_vat_verification_ajax_callback', 'pmprovat_vat_verification_ajax_callback' );
 	add_action( 'wp_ajax_pmprovat_vat_verification_ajax_callback', 'pmprovat_vat_verification_ajax_callback' );
 }
@@ -103,22 +118,22 @@ add_action("init", "pmprovat_init");
  */
 function pmprovat_enqueue_scripts() {
 	global $pmpro_pages, $pmpro_european_union;
-	
+
 	//PMPro not active
 	if(empty($pmpro_pages))
 		return;
-	
+
 	//only if we're on the checkout page
-	if(!empty($_REQUEST['level']) || is_page($pmpro_pages['checkout'])) {		
+	if(!empty($_REQUEST['level']) || is_page($pmpro_pages['checkout'])) {
 		//register
 		wp_register_script('pmprovat', plugin_dir_url( __FILE__ ) . 'js/pmprovat.js');
-		
-		//get values			
-		wp_localize_script('pmprovat', 'pmprovat', 
+
+		//get values
+		wp_localize_script('pmprovat', 'pmprovat',
 			array(
 				'eu_array' => array_keys($pmpro_european_union),
 				'ajaxurl' => admin_url('admin-ajax.php'),
-				'timeout' => apply_filters("pmpro_ajax_timeout", 5000, "applydiscountcode"),				
+				'timeout' => apply_filters("pmpro_ajax_timeout", 5000, "applydiscountcode"),
 			)
 		);
 		//enqueue
@@ -130,7 +145,7 @@ add_action('wp_enqueue_scripts', 'pmprovat_enqueue_scripts');
 /**
  * Get VAT Validation Class
  */
-function pmprovat_get_VAT_validation() {	
+function pmprovat_get_VAT_validation() {
 	global $vatValidation;
 	if(empty($vatValidation))
 	{
@@ -138,10 +153,10 @@ function pmprovat_get_VAT_validation() {
 		{
 			require_once(dirname(__FILE__) . "/includes/vatValidation.class.php");
 		}
-		
+
 		$vatValidation = new vatValidation(array('debug' => false));
 	}
-	
+
 	return $vatValidation;
 }
 
@@ -151,19 +166,19 @@ function pmprovat_get_VAT_validation() {
 function pmprovat_verify_vat_number($country, $vat_number)
 {
 	$vatValidation = pmprovat_get_VAT_validation();
-	
+
 	if(empty($country) || empty($vat_number))
 	{
 		$result = false;
 	}
-	
+
 	else
 	{
 		$result = $vatValidation->check($country, $vat_number);
 	}
-	
+
 	$result = apply_filters('pmprovat_custom_vat_number_validate', $result);
-	
+
 	return $result;
 }
 
@@ -175,7 +190,7 @@ function pmprovat_pmpro_level_cost_text($cost, $level)
 	global $pmpro_pages;
 	if( is_page( $pmpro_pages["checkout"] ) )
 		$cost .= " " . __("Members in the EU will be charged a VAT tax.", "pmprovat");
-	
+
 	return $cost;
 }
 add_filter("pmpro_level_cost_text", "pmprovat_pmpro_level_cost_text", 10, 2);
@@ -184,7 +199,7 @@ add_filter("pmpro_level_cost_text", "pmprovat_pmpro_level_cost_text", 10, 2);
  * Show VAT country and number field at checkout.
  */
 function pmprovat_pmpro_checkout_boxes()
-{	
+{
 	global $pmpro_european_union;?>
 
 <table id="pmpro_vat_table" class="pmpro_checkout" width="100%" cellpadding="0" cellspacing="0" border="0">
@@ -196,7 +211,7 @@ function pmprovat_pmpro_checkout_boxes()
 	</tr>
 </thead>
 <tbody>
-	<tr id="vat_confirm_country">	
+	<tr id="vat_confirm_country">
 		<td>
 			<div>
 				<?php
@@ -207,7 +222,7 @@ function pmprovat_pmpro_checkout_boxes()
 					$eucountry = "";
 				?>
 				<div id="eu_self_id_instructions"><?php _e('EU customers must confirm country of residence for VAT.', 'pmprovat');?></div>
-				<label for="eucountry"><?php _e('Country of Residence', 'pmpro');?></label>
+				<label for="eucountry"><?php _e('Country of Residence', 'pmprovat');?></label>
 					<select id="eucountry" name="eucountry" class=" <?php echo pmpro_getClassForField("eucountry");?>">
 						<?php
 							foreach($pmpro_european_union as $abbr => $country)
@@ -216,9 +231,9 @@ function pmprovat_pmpro_checkout_boxes()
 							}
 						?>
 					</select>
-				
+
 				<?php //Hidden field to enable tax?>
-				
+
 				<input type="hidden" id="taxregion" name="taxregion" value="1">
 			</div>
 		</td>
@@ -228,11 +243,11 @@ function pmprovat_pmpro_checkout_boxes()
 			<div><input id="show_vat" type="checkbox" name="show_vat" value="1"> <label for="show_vat" class="pmpro_normal pmpro_clickable"><?php _e('I have a VAT number', 'pmprovat');?></label></div>
 		</td>
 	</tr>
-	
+
 	<tr id="vat_number_validation_tr">
 		<td>
 			<div>
-				<label for="vat_number"><?php _e('Vat Number', 'pmpro');?></label>
+				<label for="vat_number"><?php _e('Vat Number', 'pmprovat');?></label>
 				<input id="vat_number" name="vat_number" class="input" type="text"  size="20" value="<?php ?>" />
 				<input type="button" name="vat_number_validation_button" id="vat_number_validation_button" value="<?php _e('Apply', 'pmpro');?>" />
 				<p id="vat_number_message" class="pmpro_message" style="display: none;"></p>
@@ -252,14 +267,14 @@ function pmprovat_vat_verification_ajax_callback()
 {
 	$vat_number = $_REQUEST['vat_number'];
 	$country = $_REQUEST['country'];
-		
+
 	$result = pmprovat_verify_vat_number($country, $vat_number);
-	
+
 	if($result)
 		echo "true";
 	else
 		echo "false";
-	
+
 	exit();
 }
 
@@ -269,42 +284,42 @@ function pmprovat_vat_verification_ajax_callback()
 function pmprovat_check_vat_fields_submission($value)
 {
 	global $pmpro_european_union, $pmpro_msg, $pmpro_msgt;
-	
+
 	if(!empty($_REQUEST['bcountry']))
 		$bcountry = $_REQUEST['bcountry'];
 	else
 		$bcountry = "";
-	
+
 	if(!empty($_REQUEST['eucountry']))
 		$eucountry = $_REQUEST['eucountry'];
 	else
 		$eucountry = "";
-	
+
 	//only if billing country is an EU country
 	if(!empty($bcountry) && array_key_exists($bcountry, $pmpro_european_union))
 	{
 		if($bcountry !== $eucountry)
 		{
-			$pmpro_msg = "Billing country and country self identification must match";
+			$pmpro_msg = __( "Billing country and country self identification must match", 'pmprovat' );
 			$pmpro_msgt = "pmpro_error";
-			$value = false;	
+			$value = false;
 		}
 	}
-	
-	//they checked to box for VAT Number and entered the number but didn't 
+
+	//they checked to box for VAT Number and entered the number but didn't
 	//actually hit "Apply". If it verifies, go through with checkout
 	//otherwise, assume they made a mistake and stop the checkout
-	
+
 	$vat_number = $_REQUEST['vat_number'];
-	
+
 	if(!empty($_REQUEST['show_vat']))
 		$show_vat = 1;
 	else
 		$show_vat = 0;
-	
+
 	if($show_vat && !pmprovat_verify_vat_number($bcountry, $vat_number))
 	{
-		$pmpro_msg = "VAT number was not verifed. Please try again.";
+		$pmpro_msg = __( "VAT number was not verifed. Please try again.",  'pmprovat' );
 		$pmpro_msgt = "pmpro_error";
 		$value = false;
 	}
@@ -323,8 +338,8 @@ function pmprovat_region_tax_check()
 	if(isset($_REQUEST['taxregion']))
 	{
 		//update the session var
-		$_SESSION['taxregion'] = $_REQUEST['taxregion'];	
-		
+		$_SESSION['taxregion'] = $_REQUEST['taxregion'];
+
 		//not empty? setup the tax function
 		if(!empty($_REQUEST['taxregion']))
 		{
@@ -347,31 +362,31 @@ add_action("init", "pmprovat_region_tax_check");
  * Apply the VAT tax if an EU country is chosen at checkout.
  */
 function pmprovat_pmpro_tax($tax, $values, $order)
-{  	
+{
 	global $pmpro_vat_by_country;
 
 	if(!empty($_REQUEST['vat_number']))
 		$vat_number = $_REQUEST['vat_number'];
 	else
 		$vat_number = "";
-		
+
 	if(!empty($_REQUEST['eucountry']))
 		$eucountry = $_REQUEST['eucountry'];
 	elseif(!empty($values['billing_country']))
 		$eucountry = $values['billing_country'];
 	else
 		$eucountry = "";
-	
+
 	if(!empty($_REQUEST['show_vat']))
 		$show_vat = 1;
 	else
 		$show_vat = 0;
-	
+
 	if(!empty($_REQUEST['vat_number_verified']) && $_REQUEST['vat_number_verified'] == "1")
 		$vat_number_verified = true;
 	else
 		$vat_number_verified = false;
-	
+
 	$vat_rate = 0;
 
 	//They didn't use the AJAX verify. Either they don't have a VAT number or
@@ -393,12 +408,12 @@ function pmprovat_pmpro_tax($tax, $values, $order)
 					$state = $_REQUEST['bstate'];
 				else
 					$state = "";
-				
+
 				if(!empty($state) && array_key_exists($state, $pmpro_vat_by_country[$values['billing_country']]))
 				{
 					$vat_rate = $pmpro_vat_by_country[$values['billing_country']][$state];
 				}
-			}			
+			}
 			else
 				$vat_rate = $pmpro_vat_by_country[$eucountry];
 		}
