@@ -47,6 +47,7 @@ function pmprovat_init()
 		"FI" => 0.24,
 		"SE" => 0.25,
 		"UK" => 0.20,
+		"GB" => 0.20,
 		"CA" => array("BC" => 0.05)
 	);
 	
@@ -85,7 +86,8 @@ function pmprovat_init()
 							"SK"  => "Slovakia",
 							"FI"  => "Finland",
 							"SE"  => "Sweden",
-							"UK"  => "United Kingdom"    
+							"UK"  => "United Kingdom",
+							"GB"  => "Great Britain"
 						    );
 	
 	/**
