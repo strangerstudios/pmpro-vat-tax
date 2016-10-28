@@ -1,6 +1,11 @@
 jQuery(document).ready(function(){
 	jQuery("select[name='bcountry']").change(function() {
-		var country = jQuery('select[name="bcountry"] option:selected').val();		
+		var country = jQuery('select[name="bcountry"] option:selected').val();	
+		
+		//	Greece is a special case as ISO Country Code is GR while in EU VAT it has EL.
+		//	So in case the user selected Greece (GR), let's change it here to EL.
+		country = country == 'GR' ? 'EL' : country;
+			
 		var showHideVATTable;
 		showHideVATTable = jQuery.inArray(country, pmprovat.eu_array);
 				
@@ -9,7 +14,7 @@ jQuery(document).ready(function(){
 			jQuery('#pmpro_vat_table').show();
 			jQuery('#vat_number_validation_tr').hide();
 			if(jQuery('#eucountry').val() == '' && jQuery('select[name=bcountry]').val() != '')
-				jQuery('#eucountry').val(jQuery('select[name=bcountry]').val());
+				jQuery('#eucountry').val( country );
 		}
 		else
 		{
@@ -22,6 +27,10 @@ jQuery(document).ready(function(){
 	jQuery('#vat_number_validation_button').click(function() {
 		var vat_number = jQuery('#vat_number').val();
 		var country = jQuery('select[name="bcountry"] option:selected').val();
+		
+		//	Greece is a special case as ISO Country Code is GR while in EU VAT it has EL.
+		//	So in case the user selected Greece (GR), let's change it here to EL.
+		country = country == 'GR' ? 'EL' : country;
 		
 		if(vat_number)
 		{

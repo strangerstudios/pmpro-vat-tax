@@ -40,7 +40,7 @@ function pmprovat_init()
 		"DK" => 0.25,
 		"DE" => 0.19,
 		"EE" => 0.20,
-		"EL" => 0.23,
+		"EL" => 0.24,
 		"ES" => 0.21,
 		"FR" => 0.20,
 		"HR" => 0.25,
@@ -56,7 +56,7 @@ function pmprovat_init()
 		"AT" => 0.20,
 		"PL" => 0.23,
 		"PT" => 0.23,
-		"RO" => 0.24,
+		"RO" => 0.20,
 		"SI" => 0.22,
 		"SK" => 0.20,
 		"FI" => 0.24,
@@ -268,7 +268,11 @@ function pmprovat_vat_verification_ajax_callback()
 {
 	$vat_number = $_REQUEST['vat_number'];
 	$country = $_REQUEST['country'];
-
+	
+	//	Greece is a special case as ISO Country Code is GR while in EU VAT it has EL.
+	//	So in case the user selected Greece (GR), let's change it here to EL.
+	$country = $country == 'GR' ? 'EL' : $country;
+	
 	$result = pmprovat_verify_vat_number($country, $vat_number);
 
 	if($result)
