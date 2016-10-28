@@ -34,8 +34,10 @@ Please visit our premium support site at http://www.paidmembershipspro.com for m
 == Changelog ==
 = .3 =
 * BUG: Change UK to GB in the country list.
+* BUG: If Greece was selected, it sent VAT prefix as "GR" while it should be "EL".
 * ENHANCEMENT: Added Croatia (HR) to the country list.
 * ENHANCEMENT: Ordered the country list by the country name.
+* ENHANCEMENT: Up to date VAT rates.
 = .2 =
 * BUG: Fixed bug where VAT was not applied if only a country of residence was chosen vs having the billing country set.
 * ENHANCEMENT: Now setting the country of residence to the billing address if the country of residence is blank when the billing address is changed.
