@@ -3,7 +3,7 @@
 Plugin Name: Paid Memberships Pro - VAT Tax
 Plugin URI: http://www.paidmembershipspro.com/wp/pmpro-vat-tax/
 Description: Calculate VAT tax at checkout and allow customers with a VAT Number lookup for VAT tax exemptions in EU countries.
-Version: .2
+Version: .3
 Author: Stranger Studios
 Author URI: http://www.strangerstudios.com
 Text Domain: pmprovat
@@ -74,33 +74,34 @@ function pmprovat_init()
 	global $pmpro_european_union;
 	$pmpro_european_union = array(""	 => __( "- Choose One -" , 'pmprovat' ),
 							"NOTEU" => __( "Non-EU Resident" , 'pmprovat' ),
+							"AT"  => __( "Austria" , 'pmprovat' ),
 							"BE"  => __( "Belgium" , 'pmprovat' ),
 							"BG"  => __( "Bulgaria" , 'pmprovat' ),
+							"HR"  => __( "Croatia", 'pmprovat' ),
+							"CY"  => __( "Cyprus" , 'pmprovat' ),
 							"CZ"  => __( "Czech Republic", 'pmprovat' ),
 							"DK"  => __( "Denmark" , 'pmprovat' ),
-							"DE"  => __( "Germany" , 'pmprovat' ),
 							"EE"  => __( "Estonia" , 'pmprovat' ),
-							"IE"  => __( "Ireland" , 'pmprovat' ),
-							"EL"  => __( "Greece" , 'pmprovat' ),
-							"ES"  => __( "Spain" , 'pmprovat' ),
+							"FI"  => __( "Finland" , 'pmprovat' ),
 							"FR"  => __( "France" , 'pmprovat' ),
+							"DE"  => __( "Germany" , 'pmprovat' ),
+							"EL"  => __( "Greece" , 'pmprovat' ),
+							"HU"  => __( "Hungary" , 'pmprovat' ),
+							"IE"  => __( "Ireland" , 'pmprovat' ),
 							"IT"  => __( "Italy" , 'pmprovat' ),
-							"CY"  => __( "Cyprus" , 'pmprovat' ),
 							"LV"  => __( "Latvia" , 'pmprovat' ),
 							"LT"  => __( "Lithuania" , 'pmprovat' ),
 							"LU"  => __( "Luxembourg" , 'pmprovat' ),
-							"HU"  => __( "Hungary" , 'pmprovat' ),
 							"MT"  => __( "Malta" , 'pmprovat' ),
 							"NL"  => __( "Netherlands" , 'pmprovat' ),
-							"AT"  => __( "Austria" , 'pmprovat' ),
 							"PL"  => __( "Poland" , 'pmprovat' ),
 							"PT"  => __( "Portugal" , 'pmprovat' ),
 							"RO"  => __( "Romania" , 'pmprovat' ),
-							"SI"  => __( "Slovenia" , 'pmprovat' ),
 							"SK"  => __( "Slovakia" , 'pmprovat' ),
-							"FI"  => __( "Finland" , 'pmprovat' ),
+							"SI"  => __( "Slovenia" , 'pmprovat' ),
+							"ES"  => __( "Spain" , 'pmprovat' ),
 							"SE"  => __( "Sweden" , 'pmprovat' ),
-							"UK"  => __( "United Kingdom", 'pmprovat' )
+							"GB"  => __( "United Kingdom", 'pmprovat' )
 						    );
 
 	/**
