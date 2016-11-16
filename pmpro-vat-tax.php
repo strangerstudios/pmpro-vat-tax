@@ -3,7 +3,7 @@
 Plugin Name: Paid Memberships Pro - VAT Tax
 Plugin URI: http://www.paidmembershipspro.com/wp/pmpro-vat-tax/
 Description: Calculate VAT tax at checkout and allow customers with a VAT Number lookup for VAT tax exemptions in EU countries.
-Version: .2
+Version: .3
 Author: Stranger Studios
 Author URI: http://www.strangerstudios.com
 Text Domain: pmprovat
@@ -40,7 +40,7 @@ function pmprovat_init()
 		"DK" => 0.25,
 		"DE" => 0.19,
 		"EE" => 0.20,
-		"EL" => 0.23,
+		"GR" => 0.24,
 		"ES" => 0.21,
 		"FR" => 0.20,
 		"HR" => 0.25,
@@ -56,7 +56,7 @@ function pmprovat_init()
 		"AT" => 0.20,
 		"PL" => 0.23,
 		"PT" => 0.23,
-		"RO" => 0.24,
+		"RO" => 0.20,
 		"SI" => 0.22,
 		"SK" => 0.20,
 		"FI" => 0.24,
@@ -74,33 +74,34 @@ function pmprovat_init()
 	global $pmpro_european_union;
 	$pmpro_european_union = array(""	 => __( "- Choose One -" , 'pmprovat' ),
 							"NOTEU" => __( "Non-EU Resident" , 'pmprovat' ),
+							"AT"  => __( "Austria" , 'pmprovat' ),
 							"BE"  => __( "Belgium" , 'pmprovat' ),
 							"BG"  => __( "Bulgaria" , 'pmprovat' ),
+							"HR"  => __( "Croatia", 'pmprovat' ),
+							"CY"  => __( "Cyprus" , 'pmprovat' ),
 							"CZ"  => __( "Czech Republic", 'pmprovat' ),
 							"DK"  => __( "Denmark" , 'pmprovat' ),
-							"DE"  => __( "Germany" , 'pmprovat' ),
 							"EE"  => __( "Estonia" , 'pmprovat' ),
-							"IE"  => __( "Ireland" , 'pmprovat' ),
-							"EL"  => __( "Greece" , 'pmprovat' ),
-							"ES"  => __( "Spain" , 'pmprovat' ),
+							"FI"  => __( "Finland" , 'pmprovat' ),
 							"FR"  => __( "France" , 'pmprovat' ),
+							"DE"  => __( "Germany" , 'pmprovat' ),
+							"GR"  => __( "Greece" , 'pmprovat' ),
+							"HU"  => __( "Hungary" , 'pmprovat' ),
+							"IE"  => __( "Ireland" , 'pmprovat' ),
 							"IT"  => __( "Italy" , 'pmprovat' ),
-							"CY"  => __( "Cyprus" , 'pmprovat' ),
 							"LV"  => __( "Latvia" , 'pmprovat' ),
 							"LT"  => __( "Lithuania" , 'pmprovat' ),
 							"LU"  => __( "Luxembourg" , 'pmprovat' ),
-							"HU"  => __( "Hungary" , 'pmprovat' ),
 							"MT"  => __( "Malta" , 'pmprovat' ),
 							"NL"  => __( "Netherlands" , 'pmprovat' ),
-							"AT"  => __( "Austria" , 'pmprovat' ),
 							"PL"  => __( "Poland" , 'pmprovat' ),
 							"PT"  => __( "Portugal" , 'pmprovat' ),
 							"RO"  => __( "Romania" , 'pmprovat' ),
-							"SI"  => __( "Slovenia" , 'pmprovat' ),
 							"SK"  => __( "Slovakia" , 'pmprovat' ),
-							"FI"  => __( "Finland" , 'pmprovat' ),
+							"SI"  => __( "Slovenia" , 'pmprovat' ),
+							"ES"  => __( "Spain" , 'pmprovat' ),
 							"SE"  => __( "Sweden" , 'pmprovat' ),
-							"UK"  => __( "United Kingdom", 'pmprovat' )
+							"GB"  => __( "United Kingdom", 'pmprovat' )
 						    );
 
 	/**
@@ -267,7 +268,11 @@ function pmprovat_vat_verification_ajax_callback()
 {
 	$vat_number = $_REQUEST['vat_number'];
 	$country = $_REQUEST['country'];
-
+	
+	//	Greece is a special case as ISO Country Code is GR while in EU VAT it has EL.
+	//	So in case the user selected Greece (GR), let's change it here to EL.
+	$country = $country == 'GR' ? 'EL' : $country;
+	
 	$result = pmprovat_verify_vat_number($country, $vat_number);
 
 	if($result)
