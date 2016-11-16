@@ -1,9 +1,22 @@
 jQuery(document).ready(function(){
-	jQuery("select[name='bcountry']").change(function() {
-		var country = jQuery('select[name="bcountry"] option:selected').val();		
-		var showHideVATTable;
+	var billing_country = jQuery('select[name='bcountry']);
+	
+	// Assume 'hide'
+	var showHideVATTable = -1;
+	
+	// country is used multiple places so define the variable once
+	var country;
+	
+	if ( billing_country.length > 0 ) {
+		showHideVATTable = 0;
+	} else {
+		// Billing info present on page so collect the correct info.
+		country = billing_country.find('option:selected').val();
 		showHideVATTable = jQuery.inArray(country, pmprovat.eu_array);
-				
+	}
+	
+	billing_country.change(function() {
+			
 		if(showHideVATTable > -1)
 		{
 			jQuery('#pmpro_vat_table').show();
@@ -16,12 +29,11 @@ jQuery(document).ready(function(){
 			jQuery('#pmpro_vat_table').hide();
 			jQuery('#pmpro_vat_table').focus();
 		}
-		
+	
 	}).change();
 	
 	jQuery('#vat_number_validation_button').click(function() {
 		var vat_number = jQuery('#vat_number').val();
-		var country = jQuery('select[name="bcountry"] option:selected').val();
 		
 		if(vat_number)
 		{
