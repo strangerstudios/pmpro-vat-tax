@@ -2,7 +2,7 @@
 Contributors: strangerstudios
 Tags: paid memberships pro, pmpro, tax, vat, eu
 Requires at least: 3.5
-Tested up to: 4.5
+Tested up to: 4.6.1
 Stable tag: .3
 
 Calculate VAT tax at checkout and allow customers with a VAT Number to avoid the tax.
@@ -32,7 +32,11 @@ For immediate help, also post to our premium support site at http://www.paidmemb
 Please visit our premium support site at http://www.paidmembershipspro.com for more documentation and our support forums.
 
 == Changelog ==
+
 = .3 =
+* FEATURE: Now supports PayPal Express and TwoCheckout
+* BUG: Fixed various issues with the hide/show logic for the VAT area at checkout.
+* BUG: Fixed various issues with VAT Number validation
 * BUG: Change UK to GB in the country list.
 * BUG: If Greece was selected, it sent VAT prefix as "GR" while it should be "EL".
 * ENHANCEMENT: Added Croatia (HR) to the country list.

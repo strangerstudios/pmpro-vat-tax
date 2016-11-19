@@ -167,14 +167,10 @@ function pmprovat_get_VAT_validation() {
 function pmprovat_verify_vat_number($country, $vat_number)
 {
 	$vatValidation = pmprovat_get_VAT_validation();
-
-	if(empty($country) || empty($vat_number))
-	{
+	
+	if(empty($country) || empty($vat_number)) {
 		$result = false;
-	}
-
-	else
-	{
+	} else {
 		$result = $vatValidation->check($country, $vat_number);
 	}
 
@@ -201,8 +197,30 @@ add_filter("pmpro_level_cost_text", "pmprovat_pmpro_level_cost_text", 10, 2);
  */
 function pmprovat_pmpro_checkout_boxes()
 {
-	global $pmpro_european_union;?>
-
+	global $pmpro_european_union, $pmpro_review;
+	
+	//get some values
+	if(!empty($_REQUEST['eucountry']))
+		$eucountry = $_REQUEST['eucountry'];
+	elseif(!empty($_SESSION['eucountry']))
+		$eucountry = $_SESSION['eucountry'];
+	else
+		$eucountry = "";
+	
+	if(!empty($_REQUEST['show_vat']))
+		$show_vat = $_REQUEST['show_vat'];
+	elseif(!empty($_SESSION['show_vat']))
+		$show_vat = $_SESSION['show_vat'];
+	else
+		$show_vat = "";
+	
+	if(!empty($_REQUEST['vat_number']))
+		$vat_number = $_REQUEST['vat_number'];
+	elseif(!empty($_SESSION['vat_number']))
+		$vat_number = $_SESSION['vat_number'];
+	else
+		$vat_number = "";
+?>
 <table id="pmpro_vat_table" class="pmpro_checkout" width="100%" cellpadding="0" cellspacing="0" border="0">
 <thead>
 	<tr>
@@ -215,15 +233,12 @@ function pmprovat_pmpro_checkout_boxes()
 	<tr id="vat_confirm_country">
 		<td>
 			<div>
-				<?php
-				//Add section below if billing address is from EU country
-				if(!empty($_REQUEST['eucountry']))
-					$eucountry = $_REQUEST['eucountry'];
-				else
-					$eucountry = "";
-				?>
 				<div id="eu_self_id_instructions"><?php _e('EU customers must confirm country of residence for VAT.', 'pmprovat');?></div>
 				<label for="eucountry"><?php _e('Country of Residence', 'pmprovat');?></label>
+				<?php if(!$pmpro_review) { ?>
+					<?php
+					//EU country
+					?>					
 					<select id="eucountry" name="eucountry" class=" <?php echo pmpro_getClassForField("eucountry");?>">
 						<?php
 							foreach($pmpro_european_union as $abbr => $country)
@@ -231,30 +246,45 @@ function pmprovat_pmpro_checkout_boxes()
 								<option value="<?php echo $abbr?>" <?php selected($eucountry, $abbr);?>><?php echo $country?></option><?php
 							}
 						?>
-					</select>
-
-				<?php //Hidden field to enable tax?>
-
-				<input type="hidden" id="taxregion" name="taxregion" value="1">
+					</select>					
+					<?php //Hidden field to enable tax?>
+					<input type="hidden" id="taxregion" name="taxregion" value="1">					
+				<?php } elseif(!empty($eucountry)) { ?>
+					<span><?php echo $pmpro_european_union[$eucountry];?></span>
+				<?php } ?>
 			</div>
-		</td>
+		</td>		
 	</tr>
-	<tr>
-		<td>
-			<div><input id="show_vat" type="checkbox" name="show_vat" value="1"> <label for="show_vat" class="pmpro_normal pmpro_clickable"><?php _e('I have a VAT number', 'pmprovat');?></label></div>
-		</td>
-	</tr>
+	
+	<?php if(!$pmpro_review) { ?>		
+		<tr>
+			<td>
+				<div>
+					<input id="show_vat" type="checkbox" name="show_vat" value="1" <?php checked($show_vat, 1);?>> <label for="show_vat" class="pmpro_normal pmpro_clickable"><?php _e('I have a VAT number', 'pmprovat');?></label>			
+				</div>
+			</td>
+		</tr>
 
-	<tr id="vat_number_validation_tr">
-		<td>
-			<div>
-				<label for="vat_number"><?php _e('Vat Number', 'pmprovat');?></label>
-				<input id="vat_number" name="vat_number" class="input" type="text"  size="20" value="<?php ?>" />
-				<input type="button" name="vat_number_validation_button" id="vat_number_validation_button" value="<?php _e('Apply', 'pmpro');?>" />
-				<p id="vat_number_message" class="pmpro_message" style="display: none;"></p>
-			</div>
-		</td>
-	</tr>
+		<tr id="vat_number_validation_tr">
+			<td>
+				<div>
+					<label for="vat_number"><?php _e('Vat Number', 'pmprovat');?></label>
+					<input id="vat_number" name="vat_number" class="input" type="text"  size="20" value="<?php echo esc_attr($vat_number);?>" />
+					<input type="button" name="vat_number_validation_button" id="vat_number_validation_button" value="<?php _e('Apply', 'pmpro');?>" />
+					<p id="vat_number_message" class="pmpro_message" style="display: none;"></p>
+				</div>
+			</td>
+		</tr>
+	<?php } elseif($pmpro_review && !empty($vat_number)) { ?>
+		<tr>
+			<td>
+				<div>
+					<label for="vat_number"><?php _e('Vat Number', 'pmprovat');?></label>
+					<?php echo $vat_number;?>
+				</div>
+			</td>
+		</tr>
+	<?php } ?>
 </tbody>
 </table>
 <?php
@@ -301,10 +331,8 @@ function pmprovat_check_vat_fields_submission($value)
 		$eucountry = "";
 
 	//only if billing country is an EU country
-	if(!empty($bcountry) && array_key_exists($bcountry, $pmpro_european_union))
-	{
-		if($bcountry !== $eucountry)
-		{
+	if(!empty($bcountry) && array_key_exists($bcountry, $pmpro_european_union)) {
+		if($bcountry !== $eucountry) {
 			$pmpro_msg = __( "Billing country and country self identification must match", 'pmprovat' );
 			$pmpro_msgt = "pmpro_error";
 			$value = false;
@@ -322,8 +350,10 @@ function pmprovat_check_vat_fields_submission($value)
 	else
 		$show_vat = 0;
 
-	if($show_vat && !pmprovat_verify_vat_number($bcountry, $vat_number))
-	{
+	//check that we have values to check
+	if(empty($eucountry) || empty($vat_number)) {
+		$value = false;
+	} elseif($show_vat && !pmprovat_verify_vat_number($eucountry, $vat_number)) {
 		$pmpro_msg = __( "VAT number was not verifed. Please try again.",  'pmprovat' );
 		$pmpro_msgt = "pmpro_error";
 		$value = false;
@@ -372,11 +402,15 @@ function pmprovat_pmpro_tax($tax, $values, $order)
 
 	if(!empty($_REQUEST['vat_number']))
 		$vat_number = $_REQUEST['vat_number'];
+	elseif(!empty($_SESSION['vat_number']))
+		$vat_number = $_SESSION['vat_number'];
 	else
 		$vat_number = "";
 
 	if(!empty($_REQUEST['eucountry']))
 		$eucountry = $_REQUEST['eucountry'];
+	elseif(!empty($_SESSION['eucountry']))
+		$eucountry = $_SESSION['eucountry'];
 	elseif(!empty($values['billing_country']))
 		$eucountry = $values['billing_country'];
 	else
@@ -384,10 +418,14 @@ function pmprovat_pmpro_tax($tax, $values, $order)
 
 	if(!empty($_REQUEST['show_vat']))
 		$show_vat = 1;
+	elseif(!empty($_SESSION['show_vat']))
+		$show_vat = $_SESSION['show_vat'];
 	else
 		$show_vat = 0;
 
 	if(!empty($_REQUEST['vat_number_verified']) && $_REQUEST['vat_number_verified'] == "1")
+		$vat_number_verified = true;
+	elseif(!empty($_SESSION['vat_number_verified']) && $_SESSION['vat_number_verified'] == "1")
 		$vat_number_verified = true;
 	else
 		$vat_number_verified = false;
@@ -429,6 +467,23 @@ function pmprovat_pmpro_tax($tax, $values, $order)
 
 	return $tax;
 }
+
+/**
+ * Save VAT to Session when going to an offsite gateway.
+ */
+function pmprovat_pmpro_checkout_before_processing() {
+	if(!empty($_REQUEST['eucountry']))
+		$_SESSION['eucountry'] = $_REQUEST['eucountry'];
+	if(!empty($_REQUEST['bcountry']))
+		$_SESSION['bcountry'] = $_REQUEST['bcountry'];
+	if(!empty($_REQUEST['show_vat']))
+		$_SESSION['show_vat'] = $_REQUEST['show_vat'];
+	if(!empty($_REQUEST['vat_number']))
+		$_SESSION['vat_number'] = $_REQUEST['vat_number'];
+	if(!empty($_REQUEST['vat_number_verified']))
+		$_SESSION['vat_number_verified'] = $_REQUEST['vat_number_verified'];
+}
+add_action('pmpro_checkout_before_processing', 'pmprovat_pmpro_checkout_before_processing');
 
 /**
  * Remove the taxregion session var on checkout

@@ -62,7 +62,7 @@ class vatValidation
 		return $this->_data['address'];
 	}
 	
-	public function isDebug() {
+	public function isDebug() {		
 		return ($this->_options['debug'] === true);
 	}
 	private function trace($title,$body) {
@@ -88,5 +88,3 @@ class vatValidation
         return $newString;
 	}
 }
-?>
-
