@@ -1,7 +1,7 @@
 jQuery(document).ready(function(){
 	//find billing country
 	var billing_country = jQuery("select[name='bcountry']");
-	
+
 	//find gateway option
 	var gateway_option = jQuery("input[name='gateway']");
 	if(gateway_option.length < 0)
@@ -30,6 +30,11 @@ jQuery(document).ready(function(){
 			jQuery('#vat_number_validation_tr').hide();
 			if(jQuery('#eucountry').val() == '' && jQuery('select[name=bcountry]').val() != '')
 				jQuery('#eucountry').val( country );
+			
+			if(pmprovat.seller_country == country)
+				jQuery('#have_vat_number').hide();
+			else
+				jQuery('#have_vat_number').show();
 		}
 		else
 		{
