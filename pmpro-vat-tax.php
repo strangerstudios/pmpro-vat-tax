@@ -135,6 +135,7 @@ function pmprovat_enqueue_scripts() {
 				'eu_array' => array_keys($pmpro_european_union),
 				'ajaxurl' => admin_url('admin-ajax.php'),
 				'timeout' => apply_filters("pmpro_ajax_timeout", 5000, "applydiscountcode"),
+				'seller_country' => get_option('pmprovt_seller_country'),
 			)
 		);
 		//enqueue
@@ -167,7 +168,7 @@ function pmprovat_get_VAT_validation() {
 function pmprovat_verify_vat_number($country, $vat_number)
 {
 	$vatValidation = pmprovat_get_VAT_validation();
-	
+		
 	if(empty($country) || empty($vat_number)) {
 		$result = false;
 	} else {
@@ -257,7 +258,7 @@ function pmprovat_pmpro_checkout_boxes()
 	</tr>
 	
 	<?php if(!$pmpro_review) { ?>		
-		<tr>
+		<tr id="vat_have_number">
 			<td>
 				<div>
 					<input id="show_vat" type="checkbox" name="show_vat" value="1" <?php checked($show_vat, 1);?>> <label for="show_vat" class="pmpro_normal pmpro_clickable"><?php _e('I have a VAT number', 'pmprovat');?></label>			
@@ -309,7 +310,7 @@ function pmprovat_vat_verification_ajax_callback()
 		echo "true";
 	else
 		echo "false";
-
+	
 	exit();
 }
 
@@ -330,20 +331,8 @@ function pmprovat_check_vat_fields_submission($value)
 	else
 		$eucountry = "";
 
-	//only if billing country is an EU country
-	if(!empty($bcountry) && array_key_exists($bcountry, $pmpro_european_union)) {
-		if($bcountry !== $eucountry) {
-			$pmpro_msg = __( "Billing country and country self identification must match", 'pmprovat' );
-			$pmpro_msgt = "pmpro_error";
-			$value = false;
-		}
-	}
-
-	//they checked to box for VAT Number and entered the number but didn't
-	//actually hit "Apply". If it verifies, go through with checkout
-	//otherwise, assume they made a mistake and stop the checkout
-
 	$vat_number = $_REQUEST['vat_number'];
+	$seller_country = get_option('pmprovt_seller_country');
 
 	if(!empty($_REQUEST['show_vat']))
 		$show_vat = 1;
@@ -351,8 +340,26 @@ function pmprovat_check_vat_fields_submission($value)
 		$show_vat = 0;
 
 	//check that we have values to check
-	if(empty($eucountry) || empty($vat_number)) {
+	if(empty($eucountry)){
 		$value = false;
+	} elseif(empty($vat_number) && $show_vat == 1) {
+		$pmpro_msg = __( "VAT number was not entered.",  'pmprovat' );
+		$pmpro_msgt = "pmpro_error";
+		$value = false;
+	} elseif(!empty($bcountry) && array_key_exists($bcountry, $pmpro_european_union)) { //only if billing country is an EU country
+		if($bcountry !== $eucountry) {
+			$pmpro_msg = __( "Billing country and country self identification must match", 'pmprovat' );
+			$pmpro_msgt = "pmpro_error";
+			$value = false;
+		}
+	} elseif($bcountry  == $seller_country) {
+		$pmpro_msg = __( "VAT number not accepted. Seller in same country",  'pmprovat' );
+		$pmpro_msgt = "pmpro_error";
+		$value = false;
+	
+	//they checked to box for VAT Number and entered the number but didn't
+	//actually hit "Apply". If it verifies, go through with checkout
+	//otherwise, assume they made a mistake and stop the checkout
 	} elseif($show_vat && !pmprovat_verify_vat_number($eucountry, $vat_number)) {
 		$pmpro_msg = __( "VAT number was not verifed. Please try again.",  'pmprovat' );
 		$pmpro_msgt = "pmpro_error";
@@ -510,3 +517,87 @@ function pmprovat_plugin_row_meta($links, $file) {
 	return $links;
 }
 add_filter('plugin_row_meta', 'pmprovat_plugin_row_meta', 10, 2);
+
+function pmprovat_pmpro_payment_option_fields($payment_option_values, $gateway)
+{
+	global $pmpro_european_union;
+		
+	if(isset($_REQUEST['pmprovt_seller_country']))
+	{
+		$seller_country = $_REQUEST['pmprovt_seller_country'];
+		update_option('pmprovt_seller_country', $seller_country, 'no');
+	}
+	else
+		$seller_country = get_option('pmprovt_seller_country');
+	
+	?>
+			<tr class="pmpro_settings_divider">
+				<td colspan="2">
+					<?php _e('EU Vat Seller Country', 'paid-memberships-pro' ); ?>
+				</td>
+			</tr>
+			
+			<tr>
+			<th scope="row" valign="top">
+				<label for="pmprovt_seller_country"><?php _e('Seller Country', 'paid-memberships-pro' );?>:</label>
+			</th>
+			<td>
+				<select id = "pmprovt_seller_country" name = "pmprovt_seller_country">
+					<?php
+						foreach($pmpro_european_union as $abbr => $country)
+						{
+
+						?>
+						<option value="<?php echo $abbr?>" <?php if($abbr == $seller_country) { ?>selected="selected"<?php } ?>><?php echo $country?></option>
+						<?php
+						}
+					?>
+				</select>
+			</td>
+			</tr>
+<?php
+
+}
+add_action('pmpro_payment_option_fields', 'pmprovat_pmpro_payment_option_fields', 10, 2);
+
+/**
+ * Function to add VAT Number to order notes
+ */
+function pmprovat_pmpro_added_order($order)
+{
+	global $wpdb;
+	
+	if(isset($_REQUEST['vat_number']))
+		$vat_number = $_REQUEST['vat_number'];
+	
+	if(isset($_REQUEST['vat_number_verified']))
+		$vat_number_verified = $_REQUEST['vat_number_verified'];
+	
+	if(isset($_REQUEST['bcountry']))
+		$bcountry = $_REQUEST['bcountry'];
+	
+	$notes = "";
+
+	if(!empty($vat_number) && $vat_number_verified)
+	{
+		$notes .= "\n---\n{EU_VAT_NUMBER:" . $vat_number . "}\n---\n";
+		$notes .= "\n---\n{EU_VAT_COUNTRY:" . $bcountry . "}\n---\n";
+	}
+	
+	$order->notes .= $notes;
+	$sqlQuery = "UPDATE $wpdb->pmpro_membership_orders SET notes = '" . esc_sql($order->notes) . "' WHERE id = '" . intval($order->id) . "' LIMIT 1";
+	$wpdb->query($sqlQuery);
+	
+	return $order;
+}
+
+add_action('pmpro_added_order', 'pmprovat_pmpro_added_order');
+
+function pmprovat_pmpro_invoice_bullets_bottom($pmpro_invoice)
+{
+	$vat_number	= pmpro_getMatches("/{EU_VAT_NUMBER:([^}]*)}/", $pmpro_invoice->notes, true);
+
+	if(isset($vat_number))
+		?><li><?php _e('VAT Number: ', 'pmprovat').$vat_number ?></li><?php
+}
+add_action('pmpro_invoice_bullets_bottom', 'pmprovat_pmpro_invoice_bullets_bottom');
