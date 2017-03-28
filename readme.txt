@@ -18,6 +18,8 @@ VAT rates are automatically calculated based on the constant rates defined in th
 1. Make sure you have the Paid Memberships Pro plugin installed and activated.
 1. Upload the `pmpro-vat-tax` directory to the `/wp-content/plugins/` directory of your site.
 1. Activate the plugin through the `Plugins` menu in WordPress.
+1. Update your payment settings to make sure you are collecting billing address at checkout.
+1. If you are using a gateway like PayPal Express that doesn't collect a billing address, install and activate the Add Address for Free Levels addon.
 
 == Frequently Asked Questions ==
 
@@ -34,8 +36,14 @@ Please visit our premium support site at http://www.paidmembershipspro.com for m
 == Changelog ==
 
 = .4 =
-* FEATURE/BUG: Can choose a "Seller Country" from the payment settings page. If a customer is checking out from the same country, no VAT is charged.
-* ENHANCEMENT: Added VAT number to invoices and order notes.
+* BUG: Fixed bug where checkouts to non-EU countries with the EU Country value not set were failing. These checkouts should go through fine without VAT applied.
+* BUG/ENHANCEMENT: Hiding VAT stuff from free levels and not requiring an EU country.
+* ENHANCEMENT: Now saving the VAT Number, VAT Country, and VAT Tax Rate to the order notes.
+* ENHANCEMENT: Also added VAT Number, VAT Country, and VAT Tax Rate to the orders export CSV.
+* ENHANCEMENT: Also added VAT Number, VAT Country, and VAT Tax Rate to the invoice bullets.
+* ENHANCEMENT: Added pmprovat_getTaxRate($country, $state = NULL) function to get tax rates out of our global array.
+* ENHANCEMENT: Can choose a "Seller Country" from the payment settings page. In the future, we may disallow customers from the same member country as the vendor from using their VAT Number for exemption. However, we need to verify the legal details of that first. For now, the seller country is just stored in the DB as an option.
+* ENHANCEMENT: Better wrapping of strings for localization.
 
 = .3 =
 * FEATURE: Now supports PayPal Express and TwoCheckout
@@ -46,6 +54,7 @@ Please visit our premium support site at http://www.paidmembershipspro.com for m
 * ENHANCEMENT: Added Croatia (HR) to the country list.
 * ENHANCEMENT: Ordered the country list by the country name.
 * ENHANCEMENT: Up to date VAT rates.
+
 = .2 =
 * BUG: Fixed bug where VAT was not applied if only a country of residence was chosen vs having the billing country set.
 * ENHANCEMENT: Now setting the country of residence to the billing address if the country of residence is blank when the billing address is changed.

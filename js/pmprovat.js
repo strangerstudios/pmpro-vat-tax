@@ -57,8 +57,9 @@ jQuery(document).ready(function(){
 		var vat_number = jQuery('#vat_number').val();
 		var eu_country = jQuery("select[name='eucountry']").find('option:selected').val();
 		
-		if(vat_number)
-		{
+		jQuery('#vat_number_message').hide();
+		
+		if(vat_number) {
 			jQuery.ajax({
 				url: pmprovat.ajaxurl,
 				type:'GET',
@@ -77,7 +78,7 @@ jQuery(document).ready(function(){
 						//print message
 						jQuery('#pmpro_message, #vat_number_message').show();							
 						jQuery('#pmpro_message, #vat_number_message').addClass('pmpro_success');
-						jQuery('#pmpro_message, #vat_number_message').html('VAT number was verifed');
+						jQuery('#pmpro_message, #vat_number_message').html(pmprovat.verified_text);
 
 						jQuery('<input>').attr({
 							type: 'hidden',
@@ -91,11 +92,11 @@ jQuery(document).ready(function(){
 						jQuery('#pmpro_message, #vat_number_message').show();
 						jQuery('#pmpro_message, #vat_number_message').removeClass('pmpro_success');
 						jQuery('#pmpro_message, #vat_number_message').addClass('pmpro_error');
-						jQuery('#pmpro_message, #vat_number_message').html('VAT number was not verifed. Please try again.');
+						jQuery('#pmpro_message, #vat_number_message').html(pmprovat.not_verified_text);
 					}
 				}
 			});
-		}	
+		}
 	});
 	
 	// toggle the VATNumber area
