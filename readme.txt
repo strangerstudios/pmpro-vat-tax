@@ -36,7 +36,7 @@ Please visit our premium support site at http://www.paidmembershipspro.com for m
 == Changelog ==
 
 = .4.1 =
-* BUG: Changed UK to GB in $pmpro_vat_by_country.
+* BUG: Changed GB back to UK in countries list.
 
 = .4 =
 * BUG: Fixed bug where checkouts to non-EU countries with the EU Country value not set were failing. These checkouts should go through fine without VAT applied.
