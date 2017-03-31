@@ -40,7 +40,7 @@ function pmprovat_init()
 		"DK" => 0.25,
 		"DE" => 0.19,
 		"EE" => 0.20,
-		"GR" => 0.24,
+		"GR" => 0.24,		//EL
 		"ES" => 0.21,
 		"FR" => 0.20,
 		"HR" => 0.25,
@@ -61,7 +61,7 @@ function pmprovat_init()
 		"SK" => 0.20,
 		"FI" => 0.24,
 		"SE" => 0.25,
-		"UK" => 0.20,
+		"GB" => 0.20,		//UK
 		"CA" => array("BC" => 0.05)
 	);
 
@@ -101,7 +101,7 @@ function pmprovat_init()
 							"SI"  => __( "Slovenia" , 'pmprovat' ),
 							"ES"  => __( "Spain" , 'pmprovat' ),
 							"SE"  => __( "Sweden" , 'pmprovat' ),
-							"UK"  => __( "United Kingdom", 'pmprovat' )
+							"GB"  => __( "United Kingdom", 'pmprovat' )
 						    );
 
 	/**
@@ -330,10 +330,13 @@ function pmprovat_vat_verification_ajax_callback()
 	$vat_number = sanitize_text_field($_REQUEST['vat_number']);
 	$country = sanitize_text_field($_REQUEST['country']);
 	
-	//	Greece is a special case as ISO Country Code is GR while in EU VAT it has EL.
-	//	So in case the user selected Greece (GR), let's change it here to EL.
+	//Greece is a special case as ISO Country Code is GR while in EU VAT it has EL.
+	//So in case the user selected Greece (GR), let's change it here to EL.
 	$country = $country == 'GR' ? 'EL' : $country;
 	
+	//Ditto GB => UK
+	$country = $country == 'GB' ? 'UK' : $country;
+
 	$result = pmprovat_verify_vat_number($country, $vat_number);
 
 	if($result)

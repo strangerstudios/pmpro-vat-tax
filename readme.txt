@@ -36,7 +36,7 @@ Please visit our premium support site at http://www.paidmembershipspro.com for m
 == Changelog ==
 
 = .4.1 =
-* BUG: Changed GB back to UK in countries list.
+* BUG: The United Kingdom has the country code GB but VAT uses UK. We are swapping GB to UK when validating the VAT number. We are still storing the ISO country code in our database and on invoices/etc (for Greece as well). We should also swap these when showing them on the invoice.
 
 = .4 =
 * BUG: Fixed bug where checkouts to non-EU countries with the EU Country value not set were failing. These checkouts should go through fine without VAT applied.
