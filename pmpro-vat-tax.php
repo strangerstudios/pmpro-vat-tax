@@ -3,7 +3,7 @@
 Plugin Name: Paid Memberships Pro - VAT Tax
 Plugin URI: http://www.paidmembershipspro.com/wp/pmpro-vat-tax/
 Description: Calculate VAT tax at checkout and allow customers with a VAT Number lookup for VAT tax exemptions in EU countries.
-Version: .4
+Version: .4.1
 Author: Stranger Studios
 Author URI: http://www.strangerstudios.com
 Text Domain: pmprovat
@@ -101,7 +101,7 @@ function pmprovat_init()
 							"SI"  => __( "Slovenia" , 'pmprovat' ),
 							"ES"  => __( "Spain" , 'pmprovat' ),
 							"SE"  => __( "Sweden" , 'pmprovat' ),
-							"GB"  => __( "United Kingdom", 'pmprovat' )
+							"UK"  => __( "United Kingdom", 'pmprovat' )
 						    );
 
 	/**
