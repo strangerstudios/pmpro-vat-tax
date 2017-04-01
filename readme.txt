@@ -36,7 +36,7 @@ Please visit our premium support site at http://www.paidmembershipspro.com for m
 == Changelog ==
 
 = .4.1 =
-* BUG: The United Kingdom has the country code GB but VAT uses UK. We are swapping GB to UK when validating the VAT number. We are still storing the ISO country code in our database and on invoices/etc (for Greece as well). We should also swap these when showing them on the invoice.
+* BUG: The United Kingdom has the ISO country code GB but VAT uses UK. Similarly Greece has the ISO country code GR but VAT uses EL. We are still using the ISO code in the internal arrays of this addon so we can compare them to the ISO codes used in the billing country PMPro already captures. However, we are now swapping GB to UK and GR to EL when validating the VAT number and storing the "VAT Country" in order notes, on the invoices page, and in the order CSV export.
 
 = .4 =
 * BUG: Fixed bug where checkouts to non-EU countries with the EU Country value not set were failing. These checkouts should go through fine without VAT applied.
