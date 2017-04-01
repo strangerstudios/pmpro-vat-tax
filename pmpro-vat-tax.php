@@ -33,6 +33,7 @@ function pmprovat_init()
 {
 	global $pmpro_vat_by_country;
 
+	//Uses ISO country designations
 	$pmpro_vat_by_country = array(
 		"BE" => 0.21,
 		"BG" => 0.20,
@@ -70,7 +71,7 @@ function pmprovat_init()
 	 */
 	$pmpro_vat_by_country = apply_filters('pmpro_vat_by_country', $pmpro_vat_by_country);
 
-	//Identify EU countries
+	//Identify EU countries. Uses ISO country designations
 	global $pmpro_european_union;
 	$pmpro_european_union = array(""	 => __( "- Choose One -" , 'pmprovat' ),
 							"NOTEU" => __( "Non-EU Resident" , 'pmprovat' ),
@@ -643,7 +644,7 @@ function pmprovat_pmpro_added_order($order)
 	if(!empty($vat_number) || !empty($eucountry)) {
 		$notes .= "\n---\n";
 		$notes .= "{EU_VAT_NUMBER:" . $vat_number . "}\n";
-		$notes .= "{EU_VAT_COUNTRY:" . $eucountry . "}\n";
+		$notes .= "{EU_VAT_COUNTRY:" . pmprovat_iso2vat($eucountry) . "}\n";
 		$notes .= "{EU_VAT_TAX_RATE:" . $vat_rate . "}\n";
 		$notes .= "---\n";
 	}
@@ -675,7 +676,7 @@ function pmprovat_vat_number_for_orders_csv($order) {
 }
 
 function pmprovat_eucountry_for_orders_csv($order) {
-	$vat_country = pmpro_getMatches("/{EU_VAT_COUNTRY:([^}]*)}/", $order->notes, true);
+	$vat_country = pmprovat_iso2vat(pmprovatpmpro_getMatches("/{EU_VAT_COUNTRY:([^}]*)}/", $order->notes, true));
 	return $vat_country;
 }
 
@@ -696,11 +697,46 @@ function pmprovat_pmpro_invoice_bullets_bottom($pmpro_invoice) {
 	if(!empty($vat_number)) {
 		?><li><strong><?php _e('VAT Number: ', 'pmprovat');?></strong><?php echo $vat_number;?></li><?php
 	}
-	if(!empty($vat_country) && array_key_exists($vat_country, $pmpro_european_union)) {
-		?><li><strong><?php _e('VAT Country: ', 'pmprovat');?></strong><?php echo $vat_country;?></li><?php
+	if(!empty($vat_country) && array_key_exists(pmprovat_vat2iso($vat_country), $pmpro_european_union)) {
+		?><li><strong><?php _e('VAT Country: ', 'pmprovat');?></strong><?php echo pmprovat_iso2vat($vat_country);?></li><?php
 	}
 	if(!empty($vat_tax_rate)) {
 		?><li><strong><?php _e('VAT Tax Rate: ', 'pmprovat');?></strong><?php echo $vat_tax_rate;?></li><?php
 	}
 }
 add_action('pmpro_invoice_bullets_bottom', 'pmprovat_pmpro_invoice_bullets_bottom');
+
+/**
+ * Convert ISO country designation to EU Vat country designation
+ * 
+ * @param string $iso_code ISO country code
+ * @return string EU Vat country code
+ */
+function pmprovat_iso2vat($iso_code)
+{
+	$vat_country_code = $iso_code;
+	
+	if($iso_code == 'GB')
+		$vat_country_code = 'UK';
+	if($iso_code == 'GR')
+		$vat_country_code = 'EL';
+	
+	return $vat_country_code;
+}
+
+/**
+ * Convert EU Vat country designation to ISO country designation
+ * 
+ * @param string $vat_country_code EU Vat country code
+ * @return string ISO country code
+ */
+function pmprovat_vat2iso($vat_country_code)
+{
+	$iso_code = $vat_country_code;
+	if($vat_country_code == 'UK')
+		$iso_code = 'GB';
+	if($vat_country_code == 'EL')
+		$iso_code = 'GR';
+	
+	return $iso_code;
+}
