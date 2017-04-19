@@ -287,7 +287,7 @@ function pmprovat_pmpro_checkout_boxes()
 			</div>
 		</td>		
 	</tr>
-	
+	<input type="hidden" id="geo_ip" name="geo_ip" value=<?php echo pmprovat_determine_country_from_ip(); ?>>
 	<?php if(!$pmpro_review) { ?>		
 		<tr id="vat_have_number">
 			<td>
@@ -386,6 +386,11 @@ function pmprovat_check_vat_fields_submission($value)
 		$show_vat = 1;
 	else
 		$show_vat = 0;
+	
+	if(!empty($_REQUEST['geo_ip']))
+		$country_by_ip = $_REQUEST['geo_ip'];
+	else
+		$country_by_ip = '';
 
 	//check that we have values to check
 	if(empty($bcountry) && empty($eucountry)){
@@ -410,10 +415,12 @@ function pmprovat_check_vat_fields_submission($value)
 		$pmpro_msgt = "pmpro_error";
 		$value = false;
 	} elseif(!empty($bcountry) && array_key_exists($bcountry, $pmpro_european_union)) { //only if billing country is an EU country
-		if($bcountry !== $eucountry) {
-			$pmpro_msg = __( "Billing country and country self identification must match", 'pmprovat' );
-			$pmpro_msgt = "pmpro_error";
-			$value = false;
+		if($country_by_ip != $bcountry) {
+			if($bcountry !== $eucountry) {
+				$pmpro_msg = __( "Billing country and country self identification must match", 'pmprovat' );
+				$pmpro_msgt = "pmpro_error";
+				$value = false;
+			}
 		}
 	}
 
@@ -427,7 +434,7 @@ add_filter("pmpro_registration_checks", "pmprovat_check_vat_fields_submission");
  */
 function pmprovat_pmpro_tax($tax, $values, $order)
 {
-	global $pmpro_vat_by_country;
+	global $current_user, $pmpro_vat_by_country;
 
 	if(!empty($_REQUEST['vat_number']))
 		$vat_number = sanitize_text_field($_REQUEST['vat_number']);
@@ -519,6 +526,7 @@ function pmprovat_pmpro_after_checkout() {
 		unset($_SESSION['vat_number_verified']);
 }
 add_action("pmpro_after_checkout", "pmprovat_pmpro_after_checkout");
+add_action('pmpro_before_send_to_paypal_standard', 'pmprovat_pmpro_after_checkout', 10);
 
 /**
  * Function to add links to the plugin row meta
@@ -590,7 +598,7 @@ function pmprovat_pmpro_added_order($order)
 	elseif(!empty($_SESSION['vat_number']))
 		$vat_number = sanitize_text_field($_SESSION['vat_number']);
 	else
-		$vat_number = '';	
+		$vat_number = '';
 	
 	//Check the billing country first. If an EU country was selected, we would have made sure it matched the billing country.
 	if(!empty($order->billing) && !empty($order->billing->country))
@@ -740,3 +748,46 @@ function pmprovat_vat2iso($vat_country_code)
 	
 	return $iso_code;
 }
+
+function pmprovat_determine_country_from_ip()
+{
+	global $country_from_ip;
+	
+	//check if the GEO IP Detect plugin is active
+	if(!defined('GEOIP_DETECT_VERSION'))
+		return false;
+	
+	if(!isset($country_from_ip))
+	{
+		//get the country
+		$record = geoip_detect2_get_info_from_current_ip();
+		$country_from_ip = $record->country->isoCode;
+
+		if(empty($country_from_ip))
+			$country_from_ip = false;
+	}
+	
+	return $country_from_ip;
+}
+
+function pmprovat_pmpro_apply_vat_to_level($level, $vat_rate)
+{
+	$level->initial_payment = $level->initial_payment * (1 + $vat_rate);
+	$level->trial_amount = $level->trial_amount * (1 + $vat_rate);
+	$level->billing_amount = $level->billing_amount * (1 + $vat_rate);
+	
+	return $level;
+}
+
+function pmprovat_init_load_session_vars($params)
+{
+	if(empty($_REQUEST['vat_number_verified']) && !empty($_SESSION['vat_number_verified']))
+	{
+		$_REQUEST['vat_number_verified'] = $_SESSION['vat_number_verified'];
+		$_REQUEST['vat_number'] = $_SESSION['vat_number'];
+	}
+	
+	return $params;
+}
+
+add_action('init', 'pmprovat_init_load_session_vars', 5);

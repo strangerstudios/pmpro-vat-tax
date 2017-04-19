@@ -13,6 +13,8 @@ jQuery(document).ready(function(){
 	// country is used multiple places so define the variable once
 	var country;
 	
+	var country_by_ip = jQuery('#geo_ip').val();
+
 	// toggle the entire VAT table
 	function pmprovt_toggleVATTable() {
 		//always showing the table if no billing country or there are multiple gateway options
@@ -23,7 +25,7 @@ jQuery(document).ready(function(){
 			country = billing_country.find('option:selected').val();
 			showHideVATTable = jQuery.inArray(country, pmprovat.eu_array);			
 		}
-		
+
 		if(showHideVATTable > -1)
 		{
 			jQuery('#pmpro_vat_table').show();
@@ -35,6 +37,12 @@ jQuery(document).ready(function(){
 				jQuery('#have_vat_number').hide();
 			else
 				jQuery('#have_vat_number').show();
+		
+			if(country_by_ip == country)
+				jQuery('#vat_confirm_country').hide();
+			else
+				jQuery('#vat_confirm_country').show();
+		
 		}
 		else
 		{
