@@ -2,8 +2,8 @@
 Contributors: strangerstudios
 Tags: paid memberships pro, pmpro, tax, vat, eu
 Requires at least: 3.5
-Tested up to: 4.7.3
-Stable tag: .4.1
+Tested up to: 4.7.4
+Stable tag: .5
 
 Calculate VAT tax at checkout and allow customers with a VAT Number to avoid the tax.
 
@@ -37,6 +37,7 @@ Please visit our premium support site at http://www.paidmembershipspro.com for m
 
 = .5 =
 * FEATURE: Added GEOIP support. Must install and activate the GeoIP Detect plugin.
+* BUG: We didn't need to convert GB to UK when validating VAT numbers. The VAT service expects GB. That's the EU code.
 
 = .4.1 =
 * BUG: The United Kingdom has the ISO country code GB but VAT uses UK. Similarly Greece has the ISO country code GR but VAT uses EL. We are still using the ISO code in the internal arrays of this addon so we can compare them to the ISO codes used in the billing country PMPro already captures. However, we are now swapping GB to UK and GR to EL when validating the VAT number and storing the "VAT Country" in order notes, on the invoices page, and in the order CSV export.

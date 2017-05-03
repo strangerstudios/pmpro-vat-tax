@@ -3,7 +3,7 @@
 Plugin Name: Paid Memberships Pro - VAT Tax
 Plugin URI: http://www.paidmembershipspro.com/wp/pmpro-vat-tax/
 Description: Calculate VAT tax at checkout and allow customers with a VAT Number lookup for VAT tax exemptions in EU countries.
-Version: .4.1
+Version: .5
 Author: Stranger Studios
 Author URI: http://www.strangerstudios.com
 Text Domain: pmprovat
@@ -333,9 +333,7 @@ function pmprovat_vat_verification_ajax_callback()
 	
 	//Greece is a special case as ISO Country Code is GR while in EU VAT it has EL.
 	//So in case the user selected Greece (GR), let's change it here to EL.
-	$country = $country == 'GR' ? 'EL' : $country;
-	
-	$country = $country == 'UK' ? 'GB' : $country;
+	$country = $country == 'GR' ? 'EL' : $country;	
 
 	$result = pmprovat_verify_vat_number($country, $vat_number);
 
@@ -722,9 +720,7 @@ add_action('pmpro_invoice_bullets_bottom', 'pmprovat_pmpro_invoice_bullets_botto
 function pmprovat_iso2vat($iso_code)
 {
 	$vat_country_code = $iso_code;
-	
-	if($iso_code == 'GB')
-		$vat_country_code = 'UK';
+		
 	if($iso_code == 'GR')
 		$vat_country_code = 'EL';
 	
@@ -739,9 +735,7 @@ function pmprovat_iso2vat($iso_code)
  */
 function pmprovat_vat2iso($vat_country_code)
 {
-	$iso_code = $vat_country_code;
-	if($vat_country_code == 'UK')
-		$iso_code = 'GB';
+	$iso_code = $vat_country_code;	
 	if($vat_country_code == 'EL')
 		$iso_code = 'GR';
 	
