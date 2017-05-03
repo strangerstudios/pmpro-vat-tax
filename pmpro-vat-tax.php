@@ -335,8 +335,7 @@ function pmprovat_vat_verification_ajax_callback()
 	//So in case the user selected Greece (GR), let's change it here to EL.
 	$country = $country == 'GR' ? 'EL' : $country;
 	
-	//Ditto GB => UK
-	$country = $country == 'GB' ? 'UK' : $country;
+	$country = $country == 'UK' ? 'GB' : $country;
 
 	$result = pmprovat_verify_vat_number($country, $vat_number);
 
