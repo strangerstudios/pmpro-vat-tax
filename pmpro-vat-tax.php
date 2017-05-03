@@ -12,6 +12,8 @@ Text Domain: pmprovat
 //uses: https://github.com/herdani/vat-validation/blob/master/vatValidation.class.php
 //For EU VAT number checking.
 
+define('PMPRO_VAT_TAX_VERSION', '.5');
+
 /**
  * Load plugin textdomain.
  */
@@ -154,7 +156,7 @@ function pmprovat_enqueue_scripts() {
 	//only if we're on the checkout page
 	if(!empty($_REQUEST['level']) || is_page($pmpro_pages['checkout'])) {
 		//register
-		wp_register_script('pmprovat', plugin_dir_url( __FILE__ ) . 'js/pmprovat.js');
+		wp_register_script('pmprovat', plugin_dir_url( __FILE__ ) . 'js/pmprovat.js', array('jquery'), PMPRO_VAT_TAX_VERSION);
 
 		//get values
 		wp_localize_script('pmprovat', 'pmprovat',
@@ -168,7 +170,7 @@ function pmprovat_enqueue_scripts() {
 			)
 		);
 		//enqueue
-		wp_enqueue_script('pmprovat', NULL, array('jquery'), '.1');
+		wp_enqueue_script('pmprovat');
 	}
 }
 add_action('wp_enqueue_scripts', 'pmprovat_enqueue_scripts');
@@ -337,10 +339,13 @@ function pmprovat_vat_verification_ajax_callback()
 
 	$result = pmprovat_verify_vat_number($country, $vat_number);
 
+	//clean up any warnings/etc that may have been output above our status we want to send here
+	ob_clean();
+		
 	if($result)
-		echo "true";
+		wp_send_json_success();
 	else
-		echo "false";
+		wp_send_json_error();
 	
 	exit();
 }

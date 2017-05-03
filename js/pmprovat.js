@@ -78,11 +78,11 @@ jQuery(document).ready(function(){
 					console.log(xml);
 					alert('Error verifying VAT: ' + xml.statusText);
 					},
-				success: function(responseHTML)
-				{
-					if(responseHTML.trim() == 'true')
-					{
-						//alert("VAT Number was verified");
+				success: function(response)
+				{										
+					response = JSON.parse(response);
+					if(response.success == true)
+					{						
 						//print message
 						jQuery('#pmpro_message, #vat_number_message').show();							
 						jQuery('#pmpro_message, #vat_number_message').addClass('pmpro_success');

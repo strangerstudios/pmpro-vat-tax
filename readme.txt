@@ -38,6 +38,7 @@ Please visit our premium support site at http://www.paidmembershipspro.com for m
 = .5 =
 * FEATURE: Added GEOIP support. Must install and activate the GeoIP Detect plugin.
 * BUG: We didn't need to convert GB to UK when validating VAT numbers. The VAT service expects GB. That's the EU code.
+* BUG/ENHANCEMENT: Updated the AJAX code to avoid issues on sites with PHP warnings/etc.
 
 = .4.1 =
 * BUG: The United Kingdom has the ISO country code GB but VAT uses UK. Similarly Greece has the ISO country code GR but VAT uses EL. We are still using the ISO code in the internal arrays of this addon so we can compare them to the ISO codes used in the billing country PMPro already captures. However, we are now swapping GB to UK and GR to EL when validating the VAT number and storing the "VAT Country" in order notes, on the invoices page, and in the order CSV export.
