@@ -34,9 +34,9 @@ jQuery(document).ready(function(){
 				jQuery('#eucountry').val( country );
 			
 			if(pmprovat.seller_country == country)
-				jQuery('#have_vat_number').hide();
+				jQuery('#vat_have_number').hide();
 			else
-				jQuery('#have_vat_number').show();
+				jQuery('#vat_have_number').show();
 		
 			if(country_by_ip == country)
 				jQuery('#vat_confirm_country').hide();
