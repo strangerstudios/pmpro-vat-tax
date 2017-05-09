@@ -84,7 +84,8 @@ jQuery(document).ready(function(){
 					if(response.success == true)
 					{						
 						//print message
-						jQuery('#pmpro_message, #vat_number_message').show();							
+						jQuery('#pmpro_message, #vat_number_message').show();
+						jQuery('#pmpro_message, #vat_number_message').removeClass('pmpro_error');
 						jQuery('#pmpro_message, #vat_number_message').addClass('pmpro_success');
 						jQuery('#pmpro_message, #vat_number_message').html(pmprovat.verified_text);
 
