@@ -686,7 +686,7 @@ function pmprovat_vat_number_for_orders_csv($order) {
 }
 
 function pmprovat_eucountry_for_orders_csv($order) {
-	$vat_country = pmprovat_iso2vat(pmprovatpmpro_getMatches("/{EU_VAT_COUNTRY:([^}]*)}/", $order->notes, true));
+	$vat_country = pmprovat_iso2vat(pmpro_getMatches("/{EU_VAT_COUNTRY:([^}]*)}/", $order->notes, true));
 	return $vat_country;
 }
 
