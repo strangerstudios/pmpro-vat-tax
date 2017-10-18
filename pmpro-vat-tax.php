@@ -3,8 +3,8 @@
 Plugin Name: Paid Memberships Pro - VAT Tax
 Plugin URI: https://www.paidmembershipspro.com/add-ons/vat-tax/
 Description: Calculate VAT tax at checkout and allow customers with a VAT Number lookup for VAT tax exemptions in EU countries.
-Version: .5.1
-Author: Stranger Studios
+Version: .5.2
+Author: Paid Memberships Pro
 Author URI: https://www.paidmembershipspro.com
 Text Domain: pmprovat
 */
@@ -12,7 +12,7 @@ Text Domain: pmprovat
 //uses: https://github.com/herdani/vat-validation/blob/master/vatValidation.class.php
 //For EU VAT number checking.
 
-define('PMPRO_VAT_TAX_VERSION', '.5');
+define('PMPRO_VAT_TAX_VERSION', '.5.2');
 
 /**
  * Load plugin textdomain.
@@ -257,70 +257,51 @@ function pmprovat_pmpro_checkout_boxes()
 	else
 		$vat_number = "";
 ?>
-<table id="pmpro_vat_table" class="pmpro_checkout" width="100%" cellpadding="0" cellspacing="0" border="0">
-<thead>
-	<tr>
-		<th>
-			<?php _e('European Union Residents VAT', 'pmprovat');?>
-		</th>
-	</tr>
-</thead>
-<tbody>
-	<tr id="vat_confirm_country">
-		<td>
-			<div>
-				<div id="eu_self_id_instructions"><?php _e('EU customers must confirm country of residence for VAT.', 'pmprovat');?></div>
-				<label for="eucountry"><?php _e('Country of Residence', 'pmprovat');?></label>
-				<?php if(!$pmpro_review) { ?>
+<div id="pmpro_vat_table" class="pmpro_checkout">
+	<hr />
+	<h3>
+		<span class="pmpro_checkout-h3-name"><?php _e('European Union Residents VAT', 'pmprovat');?></span>
+	</h3>
+	<div class="pmpro_checkout-fields">
+		<div id="vat_confirm_country" class="pmpro_checkout-field">
+			<div id="eu_self_id_instructions"><?php _e('EU customers must confirm country of residence for VAT.', 'pmprovat');?></div>
+			<label for="eucountry"><?php _e('Country of Residence', 'pmprovat');?></label>
+			<?php if(!$pmpro_review) { ?>
+				<?php
+				//EU country
+				?>					
+				<select id="eucountry" name="eucountry" class=" <?php echo pmpro_getClassForField("eucountry");?>">
 					<?php
-					//EU country
-					?>					
-					<select id="eucountry" name="eucountry" class=" <?php echo pmpro_getClassForField("eucountry");?>">
-						<?php
-							foreach($pmpro_european_union as $abbr => $country)
-							{?>
-								<option value="<?php echo $abbr?>" <?php selected($eucountry, $abbr);?>><?php echo $country?></option><?php
-							}
-						?>
-					</select>
-				<?php } elseif(!empty($eucountry)) { ?>
-					<span><?php echo $pmpro_european_union[$eucountry];?></span>
-				<?php } ?>
-			</div>
-		</td>		
-	</tr>
-	<input type="hidden" id="geo_ip" name="geo_ip" value=<?php echo pmprovat_determine_country_from_ip(); ?>>
-	<?php if(!$pmpro_review) { ?>		
-		<tr id="vat_have_number">
-			<td>
-				<div>
-					<input id="show_vat" type="checkbox" name="show_vat" value="1" <?php checked($show_vat, 1);?>> <label for="show_vat" class="pmpro_normal pmpro_clickable"><?php _e('I have a VAT number', 'pmprovat');?></label>			
-				</div>
-			</td>
-		</tr>
-
-		<tr id="vat_number_validation_tr">
-			<td>
-				<div>
-					<label for="vat_number"><?php _e('Vat Number', 'pmprovat');?></label>
-					<input id="vat_number" name="vat_number" class="input" type="text"  size="20" value="<?php echo esc_attr($vat_number);?>" />
-					<input type="button" name="vat_number_validation_button" id="vat_number_validation_button" value="<?php _e('Apply', 'pmpro');?>" />
-					<p id="vat_number_message" class="pmpro_message" style="display: none;"></p>
-				</div>
-			</td>
-		</tr>
-	<?php } elseif($pmpro_review && !empty($vat_number)) { ?>
-		<tr>
-			<td>
-				<div>
-					<label for="vat_number"><?php _e('Vat Number', 'pmprovat');?></label>
-					<?php echo $vat_number;?>
-				</div>
-			</td>
-		</tr>
-	<?php } ?>
-</tbody>
-</table>
+						foreach($pmpro_european_union as $abbr => $country)
+						{?>
+							<option value="<?php echo $abbr?>" <?php selected($eucountry, $abbr);?>><?php echo $country?></option><?php
+						}
+					?>
+				</select>
+			<?php } elseif(!empty($eucountry)) { ?>
+				<span><?php echo $pmpro_european_union[$eucountry];?></span>
+			<?php } ?>
+		</div>
+		<input type="hidden" id="geo_ip" name="geo_ip" value=<?php echo pmprovat_determine_country_from_ip(); ?>>
+		<?php if(!$pmpro_review) { ?>		
+			<div id="vat_have_number" class="pmpro_checkout-field pmpro_checkout-field-checkbox">
+				<input id="show_vat" type="checkbox" name="show_vat" value="1" <?php checked($show_vat, 1);?>>
+				<label for="show_vat" class="pmpro_clickable"><?php _e('I have a VAT number', 'pmprovat');?></label>
+			</div> <!-- end vat_have_number -->
+			<div id="vat_number_validation_tr" class="pmpro_checkout-field">
+				<label for="vat_number"><?php _e('Vat Number', 'pmprovat');?></label>
+				<input id="vat_number" name="vat_number" class="input" type="text"  size="20" value="<?php echo esc_attr($vat_number);?>" />
+				<input type="button" name="vat_number_validation_button" id="vat_number_validation_button" value="<?php _e('Apply', 'pmpro');?>" />
+				<p id="vat_number_message" class="pmpro_message" style="display: none;"></p>
+			</div> <!-- end vat_number_validation_tr -->
+		<?php } elseif($pmpro_review && !empty($vat_number)) { ?>
+			<div class="pmpro_checkout-field">
+				<label for="vat_number"><?php _e('Vat Number', 'pmprovat');?></label>
+				<?php echo $vat_number;?>
+			</div> <!-- end pmpro_checkout-field -->
+		<?php } ?>
+	</div> <!-- end pmpro_checkout-fields -->
+</div> <!-- end pmpro_vat_table -->	
 <?php
 }
 add_action("pmpro_checkout_after_billing_fields", "pmprovat_pmpro_checkout_boxes");
@@ -538,7 +519,7 @@ function pmprovat_plugin_row_meta($links, $file) {
 	{
 		$new_links = array(
 			'<a href="' . esc_url('https://www.paidmembershipspro.com/add-ons/vat-tax/')  . '" title="' . esc_attr( __( 'View Documentation', 'pmpro' ) ) . '">' . __( 'Docs', 'pmpro' ) . '</a>',
-			'<a href="' . esc_url('http://paidmembershipspro.com/support/') . '" title="' . esc_attr( __( 'Visit Customer Support Forum', 'pmprovat' ) ) . '">' . __( 'Support', 'pmprovat' ) . '</a>',
+			'<a href="' . esc_url('https://paidmembershipspro.com/support/') . '" title="' . esc_attr( __( 'Visit Customer Support Forum', 'pmprovat' ) ) . '">' . __( 'Support', 'pmprovat' ) . '</a>',
 		);
 		$links = array_merge($links, $new_links);
 	}
