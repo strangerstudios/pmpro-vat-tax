@@ -3,7 +3,7 @@
 Plugin Name: Paid Memberships Pro - VAT Tax
 Plugin URI: https://www.paidmembershipspro.com/add-ons/vat-tax/
 Description: Calculate VAT tax at checkout and allow customers with a VAT Number lookup for VAT tax exemptions in EU countries.
-Version: .5.3
+Version: .5.2
 Author: Paid Memberships Pro
 Author URI: https://www.paidmembershipspro.com
 Text Domain: pmprovat
@@ -12,7 +12,7 @@ Text Domain: pmprovat
 //uses: https://github.com/herdani/vat-validation/blob/master/vatValidation.class.php
 //For EU VAT number checking.
 
-define('PMPRO_VAT_TAX_VERSION', '.5.3');
+define('PMPRO_VAT_TAX_VERSION', '.5.2');
 
 /**
  * Load plugin textdomain.
