@@ -441,7 +441,9 @@ function pmprovat_pmpro_tax($tax, $values, $order)
 	elseif(!empty($_REQUEST['bstate']))
 		$bstate = sanitize_text_field($_REQUEST['bstate']);
 	elseif(!empty($_SESSION['bstate']))
-		$bstate = sanitize_text_field($_SESSION['bstate']);	
+		$bstate = sanitize_text_field($_SESSION['bstate']);
+	else
+		$bstate = '';
 
 	$vat_rate = 0;	//default to 0
 	
