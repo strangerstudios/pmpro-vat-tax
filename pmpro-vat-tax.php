@@ -578,18 +578,15 @@ function pmprovat_pmpro_added_order($order)
 {
 	global $wpdb, $pmpro_european_union;
 	
-	global $wpdb, $pmpro_european_union;		
-
-	//turn into a function
 	if( function_exists( 'pmpro_doing_webhook' ) && pmpro_doing_webhook() ){
-		
+
 		$first_order = $order->get_original_subscription_order( $order->subscription_transaction_id );
-		
+
 		if( !empty( $first_order ) ){
 
-			$vat_number = pmprovat_get_tax_order_notes( 'EU_VAT_NUMBER', $order );
-			$eucountry = pmprovat_get_tax_order_notes( 'EU_VAT_COUNTRY', $order );
-			$vat_rate = pmprovat_get_tax_order_notes( 'EU_VAT_TAX_RATE', $order );
+			$vat_number = pmprovat_get_tax_order_notes( 'EU_VAT_NUMBER', $first_order );
+			$eucountry = pmprovat_get_tax_order_notes( 'EU_VAT_COUNTRY', $first_order );
+			$vat_rate = floatval( pmprovat_get_tax_order_notes( 'EU_VAT_TAX_RATE', $first_order ) );
 
 			$order->subtotal = pmprovat_calculate_subtotal( $order->total, $vat_rate );
 
