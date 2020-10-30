@@ -197,7 +197,11 @@ function pmprovat_getVATValidation() {
  * Helper function to verify a VAT number.
  */
 function pmprovat_verify_vat_number($country, $vat_number)
-{		
+{
+	if( apply_filters('pmprovat_skip_validation', false) ){
+		return true;
+	}
+
 	$vatValidation = pmprovat_getVATValidation();
 		
 	if(empty($country) || empty($vat_number)) {
