@@ -2,8 +2,8 @@
 Contributors: strangerstudios
 Tags: paid memberships pro, pmpro, tax, vat, eu
 Requires at least: 4
-Tested up to: 4.8.2
-Stable tag: .5.2
+Tested up to: 5.5.3
+Stable tag: .6
 
 Calculate VAT tax at checkout and allow customers with a VAT Number to avoid the tax.
 
@@ -34,6 +34,14 @@ For immediate help, also post to our premium support site at http://www.paidmemb
 Please visit our premium support site at http://www.paidmembershipspro.com for more documentation and our support forums.
 
 == Changelog ==
+= .6 - 2020-11-03
+* ENHANCEMENT: Updated Romanian VAT to 19%. (Thanks, Mirco Babini)
+* ENHANCEMENT: Added German language files. (Thanks, Maja Benke)
+* ENHANCEMENT: Added pmprovat_skip_validation filter. If set to __return_true, the VAT verification API request will be skipped. This is useful if you do VAT verification manually later or have a high traffic site that would hit rate limits. (Thanks, Mirco Babini)
+* BUG FIX/ENHANCEMENT: Fixed warnings and notices.
+* BUG FIX/ENHANCEMENT: Now correctly calculating the tax amount and subtotal on recurring orders. Requires PMPro v2.5+.
+* BUG FIX: No longer double applying tax on recurring orders, which was happening in some cases.
+
 = .5.2 =
 * ENHANCEMENT: Improved fields display on membership checkout page to use no tables for compatibility with Paid Memberships Pro v1.9.4.
 * ENHANCEMENT: Added a pmprovat_calculated_taxes filter to modify TAX amount (in support of different VAT rates for different products, not charging VAT for certain products/levels, etc)
