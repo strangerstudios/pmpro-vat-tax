@@ -33,7 +33,7 @@ jQuery(document).ready(function(){
 			if(jQuery('#eucountry').val() == '' && jQuery('select[name=bcountry]').val() != '')
 				jQuery('#eucountry').val( country );
 			
-			if(pmprovat.seller_country == country)
+			if(pmprovat.seller_country == country && pmprovat.hide_vat_same_country)
 				jQuery('#vat_have_number').hide();
 			else
 				jQuery('#vat_have_number').show();
