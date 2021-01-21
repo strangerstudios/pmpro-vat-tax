@@ -198,6 +198,15 @@ function pmprovat_getVATValidation() {
  */
 function pmprovat_verify_vat_number($country, $vat_number)
 {
+
+	/**
+	 * GB will automatically verify as true due to the UK leaving the EU
+	 * Read up on this change on the Paid Memberships Pro Blog
+	 */
+	if( $country === 'GB' ){
+		return true;
+	}
+	
 	if( apply_filters('pmprovat_skip_validation', false) ){
 		return true;
 	}
