@@ -167,6 +167,7 @@ function pmprovat_enqueue_scripts() {
 				'seller_country' => get_option('pmprovt_seller_country'),
 				'verified_text' => __('VAT number was verifed', 'pmprovat'),
 				'not_verified_text' => __('VAT number was not verifed. Please try again.', 'pmprovat'),				
+				'hide_vat_same_country' => apply_filters( 'pmprovat_hide_vat_if_same_country', true ),
 			)
 		);
 		//enqueue
