@@ -201,11 +201,22 @@ function pmprovat_verify_vat_number($country, $vat_number)
 {
 
 	/**
-	 * GB will automatically verify as true due to the UK leaving the EU
-	 * Read up on this change on the Paid Memberships Pro Blog
+	 * GB will be verified based on a regex to provide improved validation
+	 * for UK VAT numbers after Brexit.
 	 */
 	if( $country === 'GB' ){
-		return true;
+	    preg_match('/^([GB])*(([1-9]\d{8})|([1-9]\d{11}))$/', $vat_number, $matches);
+	    if(isset($matches)){
+	        if (count($matches) > 0){
+    	        return true;
+    	    }
+    	    else{
+    	        return false;
+    	    }
+	    }
+	    else{
+	        return false;
+	    }
 	}
 	
 	if( apply_filters('pmprovat_skip_validation', false) ){
