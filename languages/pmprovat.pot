@@ -1,0 +1,248 @@
+#, fuzzy
+msgid ""
+msgstr ""
+"Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
+"Project-Id-Version: Paid Memberships Pro - VAT Tax\n"
+"POT-Creation-Date: 2019-07-30 19:40+0200\n"
+"PO-Revision-Date: 2019-07-30 19:39+0200\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 2.2\n"
+"X-Poedit-Basepath: ..\n"
+"X-Poedit-Flags-xgettext: --add-comments=translators:\n"
+"X-Poedit-WPHeader: pmpro-vat-tax.php\n"
+"X-Poedit-SourceCharset: UTF-8\n"
+"X-Poedit-KeywordsList: __;_e;_n:1,2;_x:1,2c;_ex:1,2c;_nx:4c,1,2;esc_attr__;"
+"esc_attr_e;esc_attr_x:1,2c;esc_html__;esc_html_e;esc_html_x:1,2c;_n_noop:1,2;"
+"_nx_noop:3c,1,2;__ngettext_noop:1,2\n"
+"X-Poedit-SearchPath-0: .\n"
+"X-Poedit-SearchPathExcluded-0: *.js\n"
+
+#: pmpro-vat-tax.php:78
+msgid "- Choose One -"
+msgstr ""
+
+#: pmpro-vat-tax.php:79
+msgid "Non-EU Resident"
+msgstr ""
+
+#: pmpro-vat-tax.php:80
+msgid "Austria"
+msgstr ""
+
+#: pmpro-vat-tax.php:81
+msgid "Belgium"
+msgstr ""
+
+#: pmpro-vat-tax.php:82
+msgid "Bulgaria"
+msgstr ""
+
+#: pmpro-vat-tax.php:83
+msgid "Croatia"
+msgstr ""
+
+#: pmpro-vat-tax.php:84
+msgid "Cyprus"
+msgstr ""
+
+#: pmpro-vat-tax.php:85
+msgid "Czech Republic"
+msgstr ""
+
+#: pmpro-vat-tax.php:86
+msgid "Denmark"
+msgstr ""
+
+#: pmpro-vat-tax.php:87
+msgid "Estonia"
+msgstr ""
+
+#: pmpro-vat-tax.php:88
+msgid "Finland"
+msgstr ""
+
+#: pmpro-vat-tax.php:89
+msgid "France"
+msgstr ""
+
+#: pmpro-vat-tax.php:90
+msgid "Germany"
+msgstr ""
+
+#: pmpro-vat-tax.php:91
+msgid "Greece"
+msgstr ""
+
+#: pmpro-vat-tax.php:92
+msgid "Hungary"
+msgstr ""
+
+#: pmpro-vat-tax.php:93
+msgid "Ireland"
+msgstr ""
+
+#: pmpro-vat-tax.php:94
+msgid "Italy"
+msgstr ""
+
+#: pmpro-vat-tax.php:95
+msgid "Latvia"
+msgstr ""
+
+#: pmpro-vat-tax.php:96
+msgid "Lithuania"
+msgstr ""
+
+#: pmpro-vat-tax.php:97
+msgid "Luxembourg"
+msgstr ""
+
+#: pmpro-vat-tax.php:98
+msgid "Malta"
+msgstr ""
+
+#: pmpro-vat-tax.php:99
+msgid "Netherlands"
+msgstr ""
+
+#: pmpro-vat-tax.php:100
+msgid "Poland"
+msgstr ""
+
+#: pmpro-vat-tax.php:101
+msgid "Portugal"
+msgstr ""
+
+#: pmpro-vat-tax.php:102
+msgid "Romania"
+msgstr ""
+
+#: pmpro-vat-tax.php:103
+msgid "Slovakia"
+msgstr ""
+
+#: pmpro-vat-tax.php:104
+msgid "Slovenia"
+msgstr ""
+
+#: pmpro-vat-tax.php:105
+msgid "Spain"
+msgstr ""
+
+#: pmpro-vat-tax.php:106
+msgid "Sweden"
+msgstr ""
+
+#: pmpro-vat-tax.php:107
+msgid "United Kingdom"
+msgstr ""
+
+#: pmpro-vat-tax.php:168
+msgid "VAT number was verifed"
+msgstr ""
+
+#: pmpro-vat-tax.php:169 pmpro-vat-tax.php:397
+msgid "VAT number was not verifed. Please try again."
+msgstr ""
+
+#: pmpro-vat-tax.php:221
+msgid "Members in the EU will be charged a VAT tax."
+msgstr ""
+
+#: pmpro-vat-tax.php:263
+msgid "European Union Residents VAT"
+msgstr ""
+
+#: pmpro-vat-tax.php:267
+msgid "EU customers must confirm country of residence for VAT."
+msgstr ""
+
+#: pmpro-vat-tax.php:268
+msgid "Country of Residence"
+msgstr ""
+
+#: pmpro-vat-tax.php:289
+msgid "I have a VAT number"
+msgstr ""
+
+#: pmpro-vat-tax.php:292 pmpro-vat-tax.php:299
+msgid "Vat Number"
+msgstr ""
+
+#: pmpro-vat-tax.php:294
+msgid "Apply"
+msgstr ""
+
+#: pmpro-vat-tax.php:380
+msgid "You must select a country for us to determine the VAT tax."
+msgstr ""
+
+#: pmpro-vat-tax.php:384
+msgid "VAT number was not entered."
+msgstr ""
+
+#: pmpro-vat-tax.php:403
+msgid "Billing country and country self identification must match"
+msgstr ""
+
+#: pmpro-vat-tax.php:521
+msgid "View Documentation"
+msgstr ""
+
+#: pmpro-vat-tax.php:521
+msgid "Docs"
+msgstr ""
+
+#: pmpro-vat-tax.php:522
+msgid "Visit Customer Support Forum"
+msgstr ""
+
+#: pmpro-vat-tax.php:522
+msgid "Support"
+msgstr ""
+
+#: pmpro-vat-tax.php:545
+msgid "EU VAT Seller Country"
+msgstr ""
+
+#: pmpro-vat-tax.php:551
+msgid "Seller Country"
+msgstr ""
+
+#: pmpro-vat-tax.php:689
+msgid "VAT Number: "
+msgstr ""
+
+#: pmpro-vat-tax.php:692
+msgid "VAT Country: "
+msgstr ""
+
+#: pmpro-vat-tax.php:695
+msgid "VAT Tax Rate: "
+msgstr ""
+
+#. Plugin Name of the plugin/theme
+msgid "Paid Memberships Pro - VAT Tax"
+msgstr ""
+
+#. Plugin URI of the plugin/theme
+msgid "https://www.paidmembershipspro.com/add-ons/vat-tax/"
+msgstr ""
+
+#. Description of the plugin/theme
+msgid ""
+"Calculate VAT tax at checkout and allow customers with a VAT Number lookup "
+"for VAT tax exemptions in EU countries."
+msgstr ""
+
+#. Author of the plugin/theme
+msgid "Paid Memberships Pro"
+msgstr ""
+
+#. Author URI of the plugin/theme
+msgid "https://www.paidmembershipspro.com"
+msgstr ""
