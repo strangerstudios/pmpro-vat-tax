@@ -205,18 +205,9 @@ function pmprovat_verify_vat_number($country, $vat_number)
 	 * for UK VAT numbers after Brexit.
 	 */
 	if( $country === 'GB' ){
-	    preg_match('/^([GB])*(([1-9]\d{8})|([1-9]\d{11}))$/', $vat_number, $matches);
-	    if(isset($matches)){
-	        if (count($matches) > 0){
-    	        return true;
-    	    }
-    	    else{
-    	        return false;
-    	    }
-	    }
-	    else{
-	        return false;
-	    }
+		preg_match('/^([GB])*(([1-9]\d{8})|([1-9]\d{11}))$/', $vat_number, $matches);
+		$uk_vat_is_valid = isset($matches) && count($matches) > 0;
+		return $uk_vat_is_valid;
 	}
 	
 	if( apply_filters('pmprovat_skip_validation', false) ){
