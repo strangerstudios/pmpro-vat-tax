@@ -199,6 +199,12 @@ function pmprovat_getVATValidation() {
  */
 function pmprovat_verify_vat_number($country, $vat_number)
 {
+	/**
+	 * Sometimes developers prefer to skip validation
+	 */
+	if( apply_filters('pmprovat_skip_validation', false) ){
+		return true;
+	}
 
 	/**
 	 * GB will be verified based on a regex to provide improved validation
@@ -209,11 +215,10 @@ function pmprovat_verify_vat_number($country, $vat_number)
 		$uk_vat_is_valid = isset($matches) && count($matches) > 0;
 		return $uk_vat_is_valid;
 	}
-	
-	if( apply_filters('pmprovat_skip_validation', false) ){
-		return true;
-	}
 
+	/**
+	 * Validation of any other country
+	 */
 	$vatValidation = pmprovat_getVATValidation();
 		
 	if(empty($country) || empty($vat_number)) {
