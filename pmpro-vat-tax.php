@@ -536,7 +536,7 @@ function pmprovat_plugin_row_meta($links, $file) {
 	if(strpos($file, 'pmpro-vat-tax.php') !== false)
 	{
 		$new_links = array(
-			'<a href="' . esc_url('https://www.paidmembershipspro.com/add-ons/vat-tax/')  . '" title="' . esc_attr( __( 'View Documentation', 'pmpro' ) ) . '">' . __( 'Docs', 'pmpro-vat-tax' ) . '</a>',
+			'<a href="' . esc_url('https://www.paidmembershipspro.com/add-ons/vat-tax/')  . '" title="' . esc_attr( __( 'View Documentation', 'pmpro-vat-tax' ) ) . '">' . __( 'Docs', 'pmpro-vat-tax' ) . '</a>',
 			'<a href="' . esc_url('https://paidmembershipspro.com/support/') . '" title="' . esc_attr( __( 'Visit Customer Support Forum', 'pmpro-vat-tax' ) ) . '">' . __( 'Support', 'pmpro-vat-tax' ) . '</a>',
 		);
 		$links = array_merge($links, $new_links);
