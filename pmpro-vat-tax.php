@@ -836,3 +836,16 @@ function pmprovat_calculate_subtotal( $final_amount, $tax_rate ){
 	return round( $original_amount, apply_filters( 'pmprovat_rounding', 2 ) );
 
 }
+
+
+function pmpro_vat_by_country_temporary_adjustments( $pmpro_vat_by_country ) {
+	// Luxemburg changed standard rate to 16% for the year 2023
+	// https://guichet.public.lu/en/actualites/2023/janvier/02-modification-taux-tva.html
+	if ( '2023' === date( 'Y' ) ) {
+		$pmpro_vat_by_country['LU'] = 0.16;
+	}
+
+	return $pmpro_vat_by_country;
+}
+
+add_filter( 'pmpro_vat_by_country', 'pmpro_vat_by_country_temporary_adjustments' );
