@@ -275,9 +275,9 @@ function pmprovat_pmpro_checkout_boxes()
 ?>
 <div id="pmpro_vat_table" class="pmpro_checkout">
 	<hr />
-	<h3>
-		<span class="pmpro_checkout-h3-name"><?php _e('European Union Residents VAT', 'pmprovat');?></span>
-	</h3>
+	<h2>
+		<span class="pmpro_checkout-h2-name"><?php _e('European Union Residents VAT', 'pmprovat');?></span>
+	</h2>
 	<div class="pmpro_checkout-fields">
 		<div id="vat_confirm_country" class="pmpro_checkout-field">
 			<div id="eu_self_id_instructions"><?php _e('EU customers must confirm country of residence for VAT.', 'pmprovat');?></div>
