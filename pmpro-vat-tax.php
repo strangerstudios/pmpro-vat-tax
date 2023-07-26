@@ -154,7 +154,7 @@ function pmprovat_enqueue_scripts() {
 		return;
 
 	//only if we're on the checkout page
-	if(!empty($_REQUEST['level']) || is_page($pmpro_pages['checkout'])) {
+	if ( pmpro_is_checkout() ) {
 		//register
 		wp_register_script('pmprovat', plugin_dir_url( __FILE__ ) . 'js/pmprovat.js', array('jquery'), PMPRO_VAT_TAX_VERSION);
 
