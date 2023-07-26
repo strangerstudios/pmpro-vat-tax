@@ -1,7 +1,7 @@
 <?php
 class vatValidation
 {
-	const WSDL = "http://ec.europa.eu/taxation_customs/vies/checkVatService.wsdl";
+	const WSDL = "https://ec.europa.eu/taxation_customs/vies/checkVatService.wsdl";
 	private $_client = null;
 	private $options  = array(
 						'debug' => false,
@@ -27,25 +27,38 @@ class vatValidation
 		}
 	}
 	public function check($countryCode, $vatNumber) {
-		$rs = $this->_client->checkVat( array('countryCode' => $countryCode, 'vatNumber' => $vatNumber) );
-		if($this->isDebug()) {
+
+		try {
+			// Fix this issue for Greece.
+			if ( $countryCode == 'GR' ) {
+				$countryCode = 'EL';
+			}
+
+			$rs = $this->_client->checkVat( array('countryCode' => $countryCode, 'vatNumber' => $vatNumber) );
+
+				if($this->isDebug()) {
 			$this->trace('Web Service result', $this->_client->__getLastResponse());	
 		}
-		if($rs->valid) {
-			$this->_valid = true;
-			list($denomination,$name) = explode(" " ,$rs->name,2);
-			$this->_data = array(
-									'denomination' => 	$denomination, 
-									'name' => 			$this->cleanUpString($name), 
-									'address' => 		$this->cleanUpString($rs->address),
-								);
-			return true;
-		} else {
-			$this->_valid = false;
-			$this->_data = array();
-		    return false;
-		}
+				if($rs->valid) {
+				$this->_valid = true;
+				list($denomination,$name) = explode(" " ,$rs->name,2);
+				$this->_data = array(
+										'denomination' => 	$denomination, 
+										'name' => 			$this->cleanUpString($name), 
+										'address' => 		$this->cleanUpString($rs->address),
+									);
+				return true;
+			} else {
+				$this->_valid = false;
+				$this->_data = array();
+				return false;
+			}
+
+		} catch(Exception $e) {
+			// die quietly
+		}	
 	}
+
 	public function isValid() {
 		return $this->_valid;
 	}
