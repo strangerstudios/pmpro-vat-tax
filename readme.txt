@@ -2,8 +2,8 @@
 Contributors: strangerstudios
 Tags: paid memberships pro, pmpro, tax, vat, eu
 Requires at least: 4
-Tested up to: 5.6
-Stable tag: 0.7.1
+Tested up to: 6.3
+Stable tag: 0.7.2
 
 Calculate VAT tax at checkout and allow customers with a VAT Number to avoid the tax.
 
@@ -34,6 +34,12 @@ For immediate help, also post to our premium support site at http://www.paidmemb
 Please visit our premium support site at http://www.paidmembershipspro.com for more documentation and our support forums.
 
 == Changelog == 
+= 0.7.2 - 2023-08-01 =
+* ENHANCEMENT: Moved filter `pmprovat_skip_validation` for better performance and logic reasons. (@mircobabini)
+* ENHANCEMENT: Improved text domain and localization. (@JarrydLong)
+* ENHANCEMENT: Improved accessibility by adjusting HTML heading tags to the correct size. (@michaelbeil)
+* ENHANCEMENT: Using pmpro_is_checkout for improved reliability to figure out if we need to run code on the checkout page. (@dparker1005)
+* BUG FIX: Improved compatibility for Greece customers and VAT numbers and fixes a fatal error when reacing the confirmation page. (@andrewlimaza)
 
 = 0.7.1 - 2021-01-28 =
 * ENHANCEMENT: Added additional validation for UK VAT numbers. (Thanks, nikifoth on GitHub)
