@@ -1,2 +1,4 @@
 .gitattributes export-ignore
 .github export-ignore
+.README.MD export-ignore
+pmpro-vat-tax-banner.jpeg export-ignore
