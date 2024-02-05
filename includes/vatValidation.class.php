@@ -88,9 +88,13 @@ class vatValidation
 	}
 	private function trace($title,$body) {
 		if ( $this->isDebug() ) {
-			echo '<h2>TRACE: '.$title.'</h2><pre>'. htmlentities($body).'</pre>';
-		} else {
-			error_log( 'TRACE: ' . $title . "\n" . $body . "\n" );
+			if ( $this->isDebug() ) {
+				if ( 'log' === $this->_options['debug'] ) {
+					error_log( 'TRACE: ' . $title . "\n" . $body . "\n" );
+				} else {
+					echo '<h2>TRACE: ' . $title . '</h2><pre>' . htmlentities( $body ) . '</pre>';
+				}
+			}
 		}
 	}
 	private function cleanUpString($string) {
