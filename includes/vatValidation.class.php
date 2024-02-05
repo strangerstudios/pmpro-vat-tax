@@ -83,8 +83,8 @@ class vatValidation
 		return $this->_data['address'];
 	}
 	
-	public function isDebug() {		
-		return ($this->_options['debug'] === true);
+	public function isDebug() {
+		return false !== $this->_options['debug'];
 	}
 	private function trace($title,$body) {
 		if ( $this->isDebug() ) {
