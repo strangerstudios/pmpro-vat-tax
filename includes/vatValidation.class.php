@@ -3,7 +3,7 @@ class vatValidation
 {
 	const WSDL = "https://ec.europa.eu/taxation_customs/vies/checkVatService.wsdl";
 	private $_client = null;
-	private $options  = array(
+	private $_options  = array(
 						'debug' => false,
 						);	
 	
@@ -36,9 +36,8 @@ class vatValidation
 
 			$rs = $this->_client->checkVat( array('countryCode' => $countryCode, 'vatNumber' => $vatNumber) );
 
-				if($this->isDebug()) {
-			$this->trace('Web Service result', $this->_client->__getLastResponse());	
-		}
+			$this->trace('Web Service result', $this->_client->__getLastResponse());
+
 				if($rs->valid) {
 				$this->_valid = true;
 				list($denomination,$name) = explode(" " ,$rs->name,2);
@@ -79,7 +78,11 @@ class vatValidation
 		return ($this->_options['debug'] === true);
 	}
 	private function trace($title,$body) {
-		echo '<h2>TRACE: '.$title.'</h2><pre>'. htmlentities($body).'</pre>';
+		if ( $this->isDebug() ) {
+			echo '<h2>TRACE: '.$title.'</h2><pre>'. htmlentities($body).'</pre>';
+		} else {
+			error_log( 'TRACE: ' . $title . "\n" . $body . "\n" );
+		}
 	}
 	private function cleanUpString($string) {
         for($i=0;$i<100;$i++)
