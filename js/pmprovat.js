@@ -102,6 +102,8 @@ jQuery(document).ready(function(){
 						jQuery('#pmpro_message, #vat_number_message').removeClass('pmpro_success');
 						jQuery('#pmpro_message, #vat_number_message').addClass('pmpro_error');
 						jQuery('#pmpro_message, #vat_number_message').html(pmprovat.not_verified_text);
+
+						jQuery('#pmpro_form #vat_number_verified').remove();
 					}
 				}
 			});
