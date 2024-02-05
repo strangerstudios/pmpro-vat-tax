@@ -5,8 +5,9 @@ class vatValidation
 	private $_client = null;
 	private $_options  = array(
 						'debug' => false,
-						);	
-	
+						);
+
+	private $_failed = false;
 	private $_valid = false;
 	private $_data = array();
 	
@@ -54,14 +55,19 @@ class vatValidation
 			}
 
 		} catch(Exception $e) {
-			// die quietly
+			$this->trace( 'Web Service exception', $e->getMessage() );
+			$this->_failed = true;
 		}	
 	}
 
 	public function isValid() {
 		return $this->_valid;
 	}
-	
+
+	public function isFailed() {
+		return $this->_failed;
+	}
+
 	public function getDenomination() {
 		return $this->_data['denomination'];
 	}
