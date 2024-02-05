@@ -28,6 +28,10 @@ class vatValidation
 		}
 	}
 	public function check($countryCode, $vatNumber) {
+		// ensure previous results are cleared
+		$this->_failed = false;
+		$this->_valid = false;
+		$this->_data = array();
 
 		try {
 			// Fix this issue for Greece.
@@ -49,14 +53,13 @@ class vatValidation
 									);
 				return true;
 			} else {
-				$this->_valid = false;
-				$this->_data = array();
 				return false;
 			}
 
 		} catch(Exception $e) {
 			$this->trace( 'Web Service exception', $e->getMessage() );
 			$this->_failed = true;
+			return false;
 		}	
 	}
 
