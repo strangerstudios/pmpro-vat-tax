@@ -39,6 +39,9 @@ class vatValidation
 				$countryCode = 'EL';
 			}
 
+			// Strip the country code from the vat number
+			$vatNumber = preg_replace( '/^' . $countryCode . '/', '', $vatNumber) ;
+			
 			$rs = $this->_client->checkVat( array('countryCode' => $countryCode, 'vatNumber' => $vatNumber) );
 
 			$this->trace('Web Service result', $this->_client->__getLastResponse());
@@ -113,7 +116,7 @@ class vatValidation
         foreach($words as $k=>$w)
         {                       
            	$newString .= ucfirst(strtolower($w))." "; 
-        }                
+        }
         return $newString;
 	}
 }
