@@ -3,10 +3,11 @@ class vatValidation
 {
 	const WSDL = "https://ec.europa.eu/taxation_customs/vies/checkVatService.wsdl";
 	private $_client = null;
-	private $options  = array(
+	private $_options  = array(
 						'debug' => false,
-						);	
-	
+						);
+
+	private $_failed = false;
 	private $_valid = false;
 	private $_data = array();
 	
@@ -27,6 +28,10 @@ class vatValidation
 		}
 	}
 	public function check($countryCode, $vatNumber) {
+		// ensure previous results are cleared
+		$this->_failed = false;
+		$this->_valid = false;
+		$this->_data = array();
 
 		try {
 			// Fix this issue for Greece.
@@ -36,9 +41,8 @@ class vatValidation
 
 			$rs = $this->_client->checkVat( array('countryCode' => $countryCode, 'vatNumber' => $vatNumber) );
 
-				if($this->isDebug()) {
-			$this->trace('Web Service result', $this->_client->__getLastResponse());	
-		}
+			$this->trace('Web Service result', $this->_client->__getLastResponse());
+
 				if($rs->valid) {
 				$this->_valid = true;
 				list($denomination,$name) = explode(" " ,$rs->name,2);
@@ -49,20 +53,24 @@ class vatValidation
 									);
 				return true;
 			} else {
-				$this->_valid = false;
-				$this->_data = array();
 				return false;
 			}
 
 		} catch(Exception $e) {
-			// die quietly
+			$this->trace( 'Web Service exception', $e->getMessage() );
+			$this->_failed = true;
+			return false;
 		}	
 	}
 
 	public function isValid() {
 		return $this->_valid;
 	}
-	
+
+	public function isFailed() {
+		return $this->_failed;
+	}
+
 	public function getDenomination() {
 		return $this->_data['denomination'];
 	}
@@ -75,11 +83,19 @@ class vatValidation
 		return $this->_data['address'];
 	}
 	
-	public function isDebug() {		
-		return ($this->_options['debug'] === true);
+	public function isDebug() {
+		return false !== $this->_options['debug'];
 	}
 	private function trace($title,$body) {
-		echo '<h2>TRACE: '.$title.'</h2><pre>'. htmlentities($body).'</pre>';
+		if ( $this->isDebug() ) {
+			if ( $this->isDebug() ) {
+				if ( 'log' === $this->_options['debug'] ) {
+					error_log( 'TRACE: ' . $title . "\n" . $body . "\n" );
+				} else {
+					echo '<h2>TRACE: ' . $title . '</h2><pre>' . htmlentities( $body ) . '</pre>';
+				}
+			}
+		}
 	}
 	private function cleanUpString($string) {
         for($i=0;$i<100;$i++)
