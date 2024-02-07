@@ -685,7 +685,7 @@ function pmprovat_pmpro_added_order($order)
 	$notes = "";
 	
 	// Strip the country code from the VAT number if it's there. We don't need it.
-	$vat_number = preg_replace('/^' . $eucountry . '/', '', $vat_number);
+	$vat_number = preg_replace( '/^' . $eucountry . '/', '', $vat_number );
 
 	if(!empty($vat_number) || !empty($eucountry)) {
 		$notes .= "\n---\n";
