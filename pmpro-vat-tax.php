@@ -316,7 +316,7 @@ function pmprovat_pmpro_checkout_boxes() {
 									</div> <!-- end vat_number_validation_tr -->
 								<?php } elseif ( $pmpro_review && ! empty( $vat_number ) ) { ?>
 									<div class="pmpro_checkout-field">
-										<label for="vat_number"><?php es_html_e( 'VAT Number', 'pmpro-vat-tax' );?></label>
+										<label for="vat_number"><?php esc_html_e( 'VAT Number', 'pmpro-vat-tax' );?></label>
 										<?php echo esc_html( $vat_number); ?>
 									</div> <!-- end pmpro_checkout-field -->
 								<?php } ?>
