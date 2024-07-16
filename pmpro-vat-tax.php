@@ -288,7 +288,7 @@ function pmprovat_pmpro_checkout_boxes() {
 				<h2 class="<?php echo esc_attr( pmpro_get_element_class( 'pmpro_form_heading pmpro_font-large' ) ); ?>"><?php esc_html_e( 'European Union Residents VAT', 'pmpro-vat-tax' );?></h2>
 			</legend> <!-- end pmpro_form_legend -->
 			<div class="<?php echo esc_attr( pmpro_get_element_class( 'pmpro_form_fields' ) ); ?>">
-				<div class="<?php echo pmpro_get_element_class( 'pmpro_form_field pmpro_form_field-select pmpro_form_field-eucountry', 'pmpro_form_field-eucountry' );?>">
+				<div class="<?php echo esc_attr( pmpro_get_element_class( 'pmpro_form_field pmpro_form_field-select pmpro_form_field-eucountry', 'pmpro_form_field-eucountry' ) );?>">
 					<label for="eucountry" class="<?php echo esc_attr( pmpro_get_element_class( 'pmpro_form_label' ) ); ?>"><?php esc_html_e( 'Country of Residence', 'pmpro-vat-tax' );?></label>
 					<?php if( ! $pmpro_review ) { ?>
 						<select class="<?php echo esc_attr( pmpro_get_element_class( 'pmpro_form_input pmpro_form_input-select' ) ); ?>" id="eucountry" name="eucountry">
