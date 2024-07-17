@@ -291,7 +291,7 @@ function pmprovat_pmpro_checkout_boxes() {
 				<div class="<?php echo esc_attr( pmpro_get_element_class( 'pmpro_form_field pmpro_form_field-select pmpro_form_field-eucountry', 'pmpro_form_field-eucountry' ) );?>">
 					<label for="eucountry" class="<?php echo esc_attr( pmpro_get_element_class( 'pmpro_form_label' ) ); ?>"><?php esc_html_e( 'Country of Residence', 'pmpro-vat-tax' );?></label>
 					<?php if( ! $pmpro_review ) { ?>
-						<select class="<?php echo esc_attr( pmpro_get_element_class( 'pmpro_form_input pmpro_form_input-select' ) ); ?>" id="eucountry" name="eucountry">
+						<select class="<?php echo esc_attr( pmpro_get_element_class( 'pmpro_form_input pmpro_form_input-select', 'eucountry' ) ); ?>" id="eucountry" name="eucountry">
 							<?php
 								foreach( $pmpro_european_union as $abbr => $country ) { ?>
 									<option value="<?php echo esc_attr( $abbr ); ?>" <?php selected( $eucountry, $abbr );?>><?php echo esc_html( $country ); ?></option><?php
