@@ -34,6 +34,10 @@ For immediate help, also post to our premium support site at http://www.paidmemb
 Please visit our premium support site at http://www.paidmembershipspro.com for more documentation and our support forums.
 
 == Changelog == 
+= 0.8 - TBD =
+* ENHANCEMENT: Added support for v3.1+ Paid Memberships Pro frontend changes. #120 (@andrewlimaza, @kimcoleman)
+* ENHANCEMENT: Added support for V3.1+ Paid Memberships Pro new order hook using the `pmpro_order_single_meta` action. (@kimcoleman)
+
 = 0.7.3 - 2024-02-09 =
 * ENHANCEMENT: Improved logic to validate VAT numbers for all countries. This will automatically strip the country code from the VAT number if entered in order to validate correctly. (@andrewlimaza)
 * ENHANCEMENT: Improved logic around debugging VAT number validation. (@mircobabini)
