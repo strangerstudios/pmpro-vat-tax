@@ -26,9 +26,8 @@ jQuery(document).ready(function(){
 			showHideVATTable = jQuery.inArray(country, pmprovat.eu_array);			
 		}
 
-		if(showHideVATTable > -1)
-		{
-			jQuery('#pmpro_vat_table').show();
+		if (showHideVATTable > -1) {
+			jQuery('#pmpro_form_fieldset-vat-tax').show();
 			jQuery('#vat_number_validation_tr').hide();
 			if(jQuery('#eucountry').val() == '' && jQuery('select[name=bcountry]').val() != '')
 				jQuery('#eucountry').val( country );
@@ -44,10 +43,9 @@ jQuery(document).ready(function(){
 				jQuery('#vat_confirm_country').show();
 		
 		}
-		else
-		{
-			jQuery('#pmpro_vat_table').hide();
-			jQuery('#pmpro_vat_table').focus();
+		else {
+			jQuery('#pmpro_form_fieldset-vat-tax').hide();
+			jQuery('#pmpro_form_fieldset-vat-tax').focus();
 		}
 		
 		pmprovt_toggleVATNumber();
