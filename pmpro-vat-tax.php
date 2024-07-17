@@ -741,7 +741,7 @@ function pmprovat_tax_rate_for_orders_csv($order) {
 /**
  * Add VAT information to orders for PMPro v3.1+
  *
- * @since TBD
+ * @since 0.8
  *
  * @param array $pmpro_order_single_meta Array of order meta.
  * @param object $pmpro_invoice The order object.
