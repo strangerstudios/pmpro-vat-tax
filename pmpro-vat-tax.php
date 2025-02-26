@@ -62,7 +62,7 @@ function pmprovat_init()
 		"RO" => 0.19,
 		"SI" => 0.22,
 		"SK" => 0.20,
-		"FI" => 0.24,
+		"FI" => 0.255,
 		"SE" => 0.25,
 		"GB" => 0.20,		//UK
 		"CA" => array("BC" => 0.05)
