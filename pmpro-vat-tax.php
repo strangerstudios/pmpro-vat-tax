@@ -306,8 +306,7 @@ function pmprovat_pmpro_checkout_boxes() {
 				<input type="hidden" id="geo_ip" name="geo_ip" value=<?php echo esc_attr( pmprovat_determine_country_from_ip() ); ?>>
 				<?php if ( ! $pmpro_review ) { ?>
 					<div id="vat_have_number" class="<?php echo esc_attr( pmpro_get_element_class( 'pmpro_form_field pmpro_form_field-checkbox' ) ); ?>">
-						<input name="show_vat" type="checkbox" value="1" id="show_vat" class="<?php echo esc_attr( pmpro_get_element_class( 'pmpro_form_input pmpro_form_input-checkbox', 'pmpro_form_input-checkbox' ) ); ?>" <?php checked($show_vat, 1); ?>>
-						<label for="show_vat" class="<?php echo esc_attr( pmpro_get_element_class( 'pmpro_form_label pmpro_form_label-inline pmpro_clickable' ) ); ?>"><?php esc_html_e( 'I have a VAT number', 'pmpro-vat-tax' );?></label>
+						<label for="show_vat" class="<?php echo esc_attr( pmpro_get_element_class( 'pmpro_form_label pmpro_form_label-inline pmpro_clickable' ) ); ?>"><input name="show_vat" type="checkbox" value="1" id="show_vat" class="<?php echo esc_attr( pmpro_get_element_class( 'pmpro_form_input pmpro_form_input-checkbox', 'pmpro_form_input-checkbox' ) ); ?>" <?php checked($show_vat, 1); ?>><?php esc_html_e( 'I have a VAT number', 'pmpro-vat-tax' );?></label>
 					</div> <!-- end #vat_have_number -->
 					<div id="vat_number_validation_tr" class="<?php echo esc_attr( pmpro_get_element_class( 'pmpro_form_field pmpro_form_field-text' ) ); ?>">
 						<label for="vat_number" class="<?php echo esc_attr( pmpro_get_element_class( 'pmpro_form_label' ) ); ?>"><?php esc_html_e( 'VAT Number', 'pmpro-vat-tax' ); ?></label>
