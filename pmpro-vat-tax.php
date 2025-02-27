@@ -12,7 +12,7 @@ Text Domain: pmpro-vat-tax
 //uses: https://github.com/herdani/vat-validation/blob/master/vatValidation.class.php
 //For EU VAT number checking.
 
-define('PMPRO_VAT_TAX_VERSION', '0.8.1');
+define( 'PMPRO_VAT_TAX_VERSION', '0.8.2' );
 
 /**
  * Load plugin textdomain.
