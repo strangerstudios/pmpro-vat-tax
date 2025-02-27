@@ -2,14 +2,14 @@
 # This file is distributed under the same license as the Paid Memberships Pro - VAT Tax plugin.
 msgid ""
 msgstr ""
-"Project-Id-Version: Paid Memberships Pro - VAT Tax 0.8\n"
+"Project-Id-Version: Paid Memberships Pro - VAT Tax 0.8.2\n"
 "Report-Msgid-Bugs-To: info@paidmembershipspro.com\n"
 "Last-Translator: Paid Memberships Pro <info@paidmembershipspro.com>\n"
 "Language-Team: Paid Memberships Pro <info@paidmembershipspro.com>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2025-02-26T11:48:55+00:00\n"
+"POT-Creation-Date: 2025-02-27T08:15:54+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.11.0\n"
 "X-Domain: pmpro-vat-tax\n"
@@ -164,7 +164,7 @@ msgid "VAT number was verifed"
 msgstr ""
 
 #: pmpro-vat-tax.php:169
-#: pmpro-vat-tax.php:422
+#: pmpro-vat-tax.php:421
 msgid "VAT number was not verifed. Please try again."
 msgstr ""
 
@@ -184,78 +184,78 @@ msgstr ""
 msgid "EU customers must confirm country of residence for VAT."
 msgstr ""
 
-#: pmpro-vat-tax.php:310
+#: pmpro-vat-tax.php:309
 msgid "I have a VAT number"
 msgstr ""
 
-#: pmpro-vat-tax.php:313
-#: pmpro-vat-tax.php:322
+#: pmpro-vat-tax.php:312
+#: pmpro-vat-tax.php:321
 msgid "VAT Number"
 msgstr ""
 
-#: pmpro-vat-tax.php:316
+#: pmpro-vat-tax.php:315
 msgid "Apply"
 msgstr ""
 
-#: pmpro-vat-tax.php:405
+#: pmpro-vat-tax.php:404
 msgid "You must select a country for us to determine the VAT tax."
 msgstr ""
 
-#: pmpro-vat-tax.php:409
+#: pmpro-vat-tax.php:408
 msgid "VAT number was not entered."
 msgstr ""
 
-#: pmpro-vat-tax.php:428
+#: pmpro-vat-tax.php:427
 msgid "Billing country and country self identification must match"
 msgstr ""
 
-#: pmpro-vat-tax.php:548
+#: pmpro-vat-tax.php:547
 msgid "View Documentation"
 msgstr ""
 
-#: pmpro-vat-tax.php:548
+#: pmpro-vat-tax.php:547
 msgid "Docs"
 msgstr ""
 
-#: pmpro-vat-tax.php:549
+#: pmpro-vat-tax.php:548
 msgid "Visit Customer Support Forum"
 msgstr ""
 
-#: pmpro-vat-tax.php:549
+#: pmpro-vat-tax.php:548
 msgid "Support"
 msgstr ""
 
-#: pmpro-vat-tax.php:573
+#: pmpro-vat-tax.php:572
 msgid "EU VAT Seller Country"
 msgstr ""
 
-#: pmpro-vat-tax.php:579
+#: pmpro-vat-tax.php:578
 msgid "Seller Country"
 msgstr ""
 
 #. translators: %s: VAT Number
-#: pmpro-vat-tax.php:762
+#: pmpro-vat-tax.php:761
 msgid "VAT Number: %s"
 msgstr ""
 
 #. translators: %s: VAT Country
-#: pmpro-vat-tax.php:766
+#: pmpro-vat-tax.php:765
 msgid "VAT Country: %s"
 msgstr ""
 
 #. translators: %s: VAT Rate
-#: pmpro-vat-tax.php:770
+#: pmpro-vat-tax.php:769
 msgid "VAT Rate: %s"
 msgstr ""
 
-#: pmpro-vat-tax.php:794
+#: pmpro-vat-tax.php:793
 msgid "VAT Number: "
 msgstr ""
 
-#: pmpro-vat-tax.php:797
+#: pmpro-vat-tax.php:796
 msgid "VAT Country: "
 msgstr ""
 
-#: pmpro-vat-tax.php:800
+#: pmpro-vat-tax.php:799
 msgid "VAT Tax Rate: "
 msgstr ""
