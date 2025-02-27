@@ -26,7 +26,7 @@ If you find an issue/bug, let us know by [creating a detailed GitHub issue](http
 This is a developer's portal for Paid Memberships Pro - VAT (Value Added Tax) Add On. We do not offer support on this channel. **Any support related questions should be directed to [paidmembershipspro.com/support](https://www.paidmembershipspro.com/support).**
 
 ## Contributing to Paid Memberships Pro - VAT (Value Added Tax) Add On ##
-We encourage and welcome any contribution to Paid Memberships Pro - VAT (Value Added Tax) Add On. Please read the [guidelines for contributing](https://github.com/strangerstudios/paid-memberships-pro/blob/dev/.github/CONTRIBUTING.md) to this repository.
+We encourage and welcome any contribution to Paid Memberships Pro - VAT (Value Added Tax) Add On. Please read the [guidelines for contributing](https://github.com/strangerstudios/pmpro-vat-tax/blob/dev/.github/CONTRIBUTING.md) to this repository.
 
 There are various **ways to the help development** of Paid Memberships Pro - VAT (Value Added Tax) Add On:
 

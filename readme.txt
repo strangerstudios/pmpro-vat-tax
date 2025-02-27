@@ -34,6 +34,9 @@ For immediate help, also post to our premium support site at http://www.paidmemb
 Please visit our premium support site at http://www.paidmembershipspro.com for more documentation and our support forums.
 
 == Changelog == 
+= 0.8.2 - 2025-02-27 =
+* BUG FIX: Fixed an issue where the checkbox was incorrectly placed on the checkout page for VAT numbers. (@ideadude)
+
 = 0.8.1 - 2025-02-26 =
 * ENHANCEMENT: Updated VAT rates for Finland and Slovakia as required. (@mircobabini)
 
