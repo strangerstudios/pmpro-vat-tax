@@ -9,6 +9,10 @@ Author URI: https://www.paidmembershipspro.com
 Text Domain: pmpro-vat-tax
 */
 
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
 //uses: https://github.com/herdani/vat-validation/blob/master/vatValidation.class.php
 //For EU VAT number checking.
 
@@ -257,29 +261,31 @@ function pmprovat_pmpro_checkout_boxes() {
 	}
 	
 	//get some values
+	// phpcs:disable WordPress.Security.NonceVerification.Recommended -- Read-only: repopulates the checkout form fields.
 	if ( ! empty( $_REQUEST['eucountry'] ) ) {
-		$eucountry = $_REQUEST['eucountry'];
+		$eucountry = sanitize_text_field( wp_unslash( $_REQUEST['eucountry'] ) );
 	} elseif ( ! empty( $_SESSION['eucountry'] ) ) {
-		$eucountry = $_SESSION['eucountry'];
+		$eucountry = sanitize_text_field( $_SESSION['eucountry'] );
 	} else {
 		$eucountry = "";
 	}
 	
 	if ( ! empty( $_REQUEST['show_vat'] ) ) {
-		$show_vat = $_REQUEST['show_vat'];
+		$show_vat = sanitize_text_field( wp_unslash( $_REQUEST['show_vat'] ) );
 	} elseif ( ! empty( $_SESSION['show_vat'] ) ) {
-		$show_vat = $_SESSION['show_vat'];
+		$show_vat = sanitize_text_field( $_SESSION['show_vat'] );
 	} else {
 		$show_vat = "";
 	}
 	
 	if ( ! empty( $_REQUEST['vat_number'] ) ) {
-		$vat_number = $_REQUEST['vat_number'];
+		$vat_number = sanitize_text_field( wp_unslash( $_REQUEST['vat_number'] ) );
 	} elseif ( ! empty( $_SESSION['vat_number'] ) ) {
-		$vat_number = $_SESSION['vat_number'];
+		$vat_number = sanitize_text_field( $_SESSION['vat_number'] );
 	} else {
 		$vat_number = "";
 	}
+	// phpcs:enable WordPress.Security.NonceVerification.Recommended
 ?>
 <fieldset id="pmpro_form_fieldset-vat-tax" class="<?php echo esc_attr( pmpro_get_element_class( 'pmpro_form_fieldset', 'pmpro_form_fieldset-vat-tax' ) ); ?>">
 	<div class="<?php echo esc_attr( pmpro_get_element_class( 'pmpro_card' ) ); ?>">
@@ -335,8 +341,10 @@ add_action("pmpro_checkout_after_billing_fields", "pmprovat_pmpro_checkout_boxes
  */
 function pmprovat_vat_verification_ajax_callback()
 {
-	$vat_number = sanitize_text_field($_REQUEST['vat_number']);
-	$country = sanitize_text_field($_REQUEST['country']);
+	// phpcs:disable WordPress.Security.NonceVerification.Recommended -- Read-only VAT number lookup for the public checkout page; no state is changed.
+	$vat_number = isset( $_REQUEST['vat_number'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['vat_number'] ) ) : '';
+	$country = isset( $_REQUEST['country'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['country'] ) ) : '';
+	// phpcs:enable WordPress.Security.NonceVerification.Recommended
 	
 	//Greece is a special case as ISO Country Code is GR while in EU VAT it has EL.
 	//So in case the user selected Greece (GR), let's change it here to EL.
@@ -366,22 +374,23 @@ function pmprovat_check_vat_fields_submission($value)
 	if(pmpro_isLevelFree($pmpro_level))
 		return $value;
 	
+	// phpcs:disable WordPress.Security.NonceVerification.Recommended -- Runs on pmpro_registration_checks; PMPro core verifies the checkout nonce before this filter.
 	if(!empty($_REQUEST['bcountry']))
-		$bcountry = sanitize_text_field($_REQUEST['bcountry']);
+		$bcountry = sanitize_text_field( wp_unslash( $_REQUEST['bcountry'] ) );
 	elseif(!empty($_SESSION['bcountry']))
 		$bcountry = sanitize_text_field($_SESSION['bcountry']);
 	else
 		$bcountry = "";
 
 	if(!empty($_REQUEST['eucountry']))
-		$eucountry = sanitize_text_field($_REQUEST['eucountry']);
+		$eucountry = sanitize_text_field( wp_unslash( $_REQUEST['eucountry'] ) );
 	elseif(!empty($_SESSION['eucountry']))
 		$eucountry = sanitize_text_field($_SESSION['eucountry']);
 	else
 		$eucountry = "";
 
 	if(!empty($_REQUEST['vat_number']))
-		$vat_number = sanitize_text_field($_REQUEST['vat_number']);
+		$vat_number = sanitize_text_field( wp_unslash( $_REQUEST['vat_number'] ) );
 	elseif(!empty($_SESSION['vat_number']))
 		$vat_number = sanitize_text_field($_SESSION['vat_number']);
 	else
@@ -395,9 +404,10 @@ function pmprovat_check_vat_fields_submission($value)
 		$show_vat = 0;
 	
 	if(!empty($_REQUEST['geo_ip']))
-		$country_by_ip = $_REQUEST['geo_ip'];
+		$country_by_ip = sanitize_text_field( wp_unslash( $_REQUEST['geo_ip'] ) );
 	else
 		$country_by_ip = '';
+	// phpcs:enable WordPress.Security.NonceVerification.Recommended
 
 	//check that we have values to check
 	if(empty($bcountry) && empty($eucountry)){
@@ -443,8 +453,9 @@ function pmprovat_pmpro_tax($tax, $values, $order)
 {
 	global $current_user, $pmpro_vat_by_country;
 
+	// phpcs:disable WordPress.Security.NonceVerification.Recommended -- Read-only: calculates tax from the checkout values; PMPro core verifies the checkout nonce before processing.
 	if(!empty($_REQUEST['vat_number']))
-		$vat_number = sanitize_text_field($_REQUEST['vat_number']);
+		$vat_number = sanitize_text_field( wp_unslash( $_REQUEST['vat_number'] ) );
 	elseif(!empty($_SESSION['vat_number']))
 		$vat_number = sanitize_text_field($_SESSION['vat_number']);
 	else
@@ -454,7 +465,7 @@ function pmprovat_pmpro_tax($tax, $values, $order)
 	if(!empty($values['billing_country']))
 		$eucountry = $values['billing_country'];	
 	elseif(!empty($_REQUEST['eucountry']))
-		$eucountry = sanitize_text_field($_REQUEST['eucountry']);		//but you might have an eucountry set with no billing country
+		$eucountry = sanitize_text_field( wp_unslash( $_REQUEST['eucountry'] ) );		//but you might have an eucountry set with no billing country
 	elseif(!empty($_SESSION['eucountry']))
 		$eucountry = sanitize_text_field($_SESSION['eucountry']);		//ditto if you store in a session to go offsite
 	else
@@ -463,7 +474,7 @@ function pmprovat_pmpro_tax($tax, $values, $order)
 	if(!empty($values['billing_state']))
 		$bstate = $values['billing_state'];
 	elseif(!empty($_REQUEST['bstate']))
-		$bstate = sanitize_text_field($_REQUEST['bstate']);
+		$bstate = sanitize_text_field( wp_unslash( $_REQUEST['bstate'] ) );
 	elseif(!empty($_SESSION['bstate']))
 		$bstate = sanitize_text_field($_SESSION['bstate']);
 	else
@@ -489,6 +500,7 @@ function pmprovat_pmpro_tax($tax, $values, $order)
 			$vat_rate = pmprovat_getTaxRate($eucountry, $bstate);		
 		}
 	}
+	// phpcs:enable WordPress.Security.NonceVerification.Recommended
 
 	//add vat to total taxes
 	if(!empty($vat_rate))
@@ -502,18 +514,20 @@ add_filter("pmpro_tax", "pmprovat_pmpro_tax", 10, 3);
  * Save VAT to Session when going to an offsite gateway.
  */
 function pmprovat_pmpro_checkout_before_processing() {
+	// phpcs:disable WordPress.Security.NonceVerification.Recommended -- Runs on pmpro_checkout_before_processing; PMPro core verifies the checkout nonce before this action.
 	if(!empty($_REQUEST['eucountry']))
-		$_SESSION['eucountry'] = sanitize_text_field($_REQUEST['eucountry']);
+		$_SESSION['eucountry'] = sanitize_text_field( wp_unslash( $_REQUEST['eucountry'] ) );
 	if(!empty($_REQUEST['bcountry']))
-		$_SESSION['bcountry'] = sanitize_text_field($_REQUEST['bcountry']);
+		$_SESSION['bcountry'] = sanitize_text_field( wp_unslash( $_REQUEST['bcountry'] ) );
 	if(!empty($_REQUEST['bstate']))
-		$_SESSION['bstate'] = sanitize_text_field($_REQUEST['bstate']);
+		$_SESSION['bstate'] = sanitize_text_field( wp_unslash( $_REQUEST['bstate'] ) );
 	if(!empty($_REQUEST['show_vat']))
 		$_SESSION['show_vat'] = intval($_REQUEST['show_vat']);
 	if(!empty($_REQUEST['vat_number']))
-		$_SESSION['vat_number'] = sanitize_text_field($_REQUEST['vat_number']);
+		$_SESSION['vat_number'] = sanitize_text_field( wp_unslash( $_REQUEST['vat_number'] ) );
 	if(!empty($_REQUEST['vat_number_verified']))
 		$_SESSION['vat_number_verified'] = intval($_REQUEST['vat_number_verified']);
+	// phpcs:enable WordPress.Security.NonceVerification.Recommended
 }
 add_action('pmpro_checkout_before_processing', 'pmprovat_pmpro_checkout_before_processing');
 
@@ -561,9 +575,10 @@ function pmprovat_pmpro_payment_option_fields($payment_option_values, $gateway)
 
 	global $pmpro_european_union;
 		
-	if(isset($_REQUEST['pmprovt_seller_country']))
+	// Only save on a real settings save. PMPro core verifies the pmpro_paymentsettings_nonce and unsets savesettings if it fails.
+	if( ! empty( $_REQUEST['savesettings'] ) && isset( $_REQUEST['pmprovt_seller_country'] ) ) // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Nonce verified by PMPro core paymentsettings.php (check_admin_referer on savesettings).
 	{
-		$seller_country = sanitize_text_field($_REQUEST['pmprovt_seller_country']);
+		$seller_country = sanitize_text_field( wp_unslash( $_REQUEST['pmprovt_seller_country'] ) ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Nonce verified by PMPro core paymentsettings.php (check_admin_referer on savesettings).
 		update_option('pmprovt_seller_country', $seller_country, 'no');
 	}
 	else
@@ -572,13 +587,13 @@ function pmprovat_pmpro_payment_option_fields($payment_option_values, $gateway)
 	?>
 			<tr class="pmpro_settings_divider">
 				<td colspan="2">
-					<?php _e('EU VAT Seller Country', 'pmpro-vat-tax' ); ?>
+					<?php esc_html_e('EU VAT Seller Country', 'pmpro-vat-tax' ); ?>
 				</td>
 			</tr>
 			
 			<tr>
 			<th scope="row" valign="top">
-				<label for="pmprovt_seller_country"><?php _e('Seller Country', 'pmpro-vat-tax' );?>:</label>
+				<label for="pmprovt_seller_country"><?php esc_html_e('Seller Country', 'pmpro-vat-tax' );?>:</label>
 			</th>
 			<td>
 				<select id = "pmprovt_seller_country" name = "pmprovt_seller_country">
@@ -587,7 +602,7 @@ function pmprovat_pmpro_payment_option_fields($payment_option_values, $gateway)
 						{
 
 						?>
-						<option value="<?php echo $abbr?>" <?php if($abbr == $seller_country) { ?>selected="selected"<?php } ?>><?php echo $country?></option>
+						<option value="<?php echo esc_attr( $abbr )?>" <?php if($abbr == $seller_country) { ?>selected="selected"<?php } ?>><?php echo esc_html( $country )?></option>
 						<?php
 						}
 					?>
@@ -607,8 +622,9 @@ add_action('pmpro_payment_option_fields', 'pmprovat_pmpro_payment_option_fields'
 function pmprovat_pmpro_after_payment_settings() {
 	global $pmpro_european_union;
 
-	if ( isset( $_REQUEST['pmprovt_seller_country'] ) ) {
-		$seller_country = sanitize_text_field( wp_unslash( $_REQUEST['pmprovt_seller_country'] ) );
+	// Only save on a real settings save. PMPro core verifies the pmpro_paymentsettings_nonce and unsets savesettings if it fails.
+	if ( ! empty( $_REQUEST['savesettings'] ) && isset( $_REQUEST['pmprovt_seller_country'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Nonce verified by PMPro core paymentsettings.php (check_admin_referer on savesettings).
+		$seller_country = sanitize_text_field( wp_unslash( $_REQUEST['pmprovt_seller_country'] ) ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Nonce verified by PMPro core paymentsettings.php (check_admin_referer on savesettings).
 		update_option( 'pmprovt_seller_country', $seller_country, 'no' );
 	} else {
 		$seller_country = get_option( 'pmprovt_seller_country' );
@@ -674,6 +690,7 @@ function pmprovat_pmpro_added_order($order)
 		$order->subtotal = pmprovat_calculate_subtotal( $order->total, $vat_rate );
 		$order->tax = $order->total - $order->subtotal;
 
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- PMPro custom orders table.
 		$wpdb->update(
 			$wpdb->pmpro_membership_orders,
 			array( 'tax' => $order->tax, 'subtotal' => $order->subtotal ),
@@ -682,9 +699,9 @@ function pmprovat_pmpro_added_order($order)
 			array( '%d' )
 		);
 	} else {
-
+		// phpcs:disable WordPress.Security.NonceVerification.Recommended -- Reads the checkout values for the order just created; PMPro core verifies the checkout nonce before creating the order.
 		if(!empty($_REQUEST['vat_number']))
-			$vat_number = sanitize_text_field($_REQUEST['vat_number']);
+			$vat_number = sanitize_text_field( wp_unslash( $_REQUEST['vat_number'] ) );
 		elseif(!empty($_SESSION['vat_number']))
 			$vat_number = sanitize_text_field($_SESSION['vat_number']);
 		else
@@ -694,11 +711,11 @@ function pmprovat_pmpro_added_order($order)
 		if(!empty($order->billing) && !empty($order->billing->country))
 			$eucountry = $order->billing->country;
 		elseif(!empty($_REQUEST['bcountry']))
-			$eucountry = sanitize_text_field($_REQUEST['bcountry']);
+			$eucountry = sanitize_text_field( wp_unslash( $_REQUEST['bcountry'] ) );
 		elseif(!empty($_SESSION['bcountry']))
 			$eucountry = sanitize_text_field($_SESSION['bcountry']);
 		elseif(!empty($_REQUEST['eucountry']))
-			$eucountry = sanitize_text_field($_REQUEST['eucountry']);
+			$eucountry = sanitize_text_field( wp_unslash( $_REQUEST['eucountry'] ) );
 		elseif(!empty($_SESSION['eucountry']))
 			$eucountry = sanitize_text_field($_SESSION['eucountry']);
 		else
@@ -709,7 +726,7 @@ function pmprovat_pmpro_added_order($order)
 			$eucountry = "";
 		
 		if(!empty($_REQUEST['bstate']))
-			$bstate = sanitize_text_field($_REQUEST['bstate']);
+			$bstate = sanitize_text_field( wp_unslash( $_REQUEST['bstate'] ) );
 		elseif(!empty($_SESSION['bstate']))
 			$bstate = sanitize_text_field($_SESSION['bstate']);
 		else
@@ -735,6 +752,7 @@ function pmprovat_pmpro_added_order($order)
 				$vat_rate = pmprovat_getTaxRate($eucountry, $bstate);		
 			}
 		}
+		// phpcs:enable WordPress.Security.NonceVerification.Recommended
 	}
 
 	
@@ -757,7 +775,7 @@ function pmprovat_pmpro_added_order($order)
 
 	$sqlQuery = "UPDATE $wpdb->pmpro_membership_orders SET notes = '" . esc_sql($order->notes) . "' WHERE id = '" . intval($order->id) . "' LIMIT 1";
 
-	$wpdb->query($sqlQuery);
+	$wpdb->query($sqlQuery); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Notes escaped with esc_sql() and quoted, ID cast with intval(); PMPro custom orders table.
 	
 	return $order;
 }
@@ -844,13 +862,13 @@ function pmprovat_pmpro_invoice_bullets_bottom( $pmpro_invoice ) {
 	$vat_country	= pmpro_getMatches("/{EU_VAT_COUNTRY:([^}]*)}/", $pmpro_invoice->notes, true);
 	$vat_tax_rate	= pmpro_getMatches("/{EU_VAT_TAX_RATE:([^}]*)}/", $pmpro_invoice->notes, true);
 	if(!empty($vat_number)) {
-		?><li><strong><?php _e('VAT Number: ', 'pmpro-vat-tax');?></strong><?php echo $vat_number;?></li><?php
+		?><li><strong><?php esc_html_e('VAT Number: ', 'pmpro-vat-tax');?></strong><?php echo esc_html( $vat_number );?></li><?php
 	}
 	if(!empty($vat_country) && array_key_exists(pmprovat_vat2iso($vat_country), $pmpro_european_union)) {
-		?><li><strong><?php _e('VAT Country: ', 'pmpro-vat-tax');?></strong><?php echo pmprovat_iso2vat($vat_country);?></li><?php
+		?><li><strong><?php esc_html_e('VAT Country: ', 'pmpro-vat-tax');?></strong><?php echo esc_html( pmprovat_iso2vat($vat_country) );?></li><?php
 	}
 	if(!empty($vat_tax_rate)) {
-		?><li><strong><?php _e('VAT Tax Rate: ', 'pmpro-vat-tax');?></strong><?php echo $vat_tax_rate;?></li><?php
+		?><li><strong><?php esc_html_e('VAT Tax Rate: ', 'pmpro-vat-tax');?></strong><?php echo esc_html( $vat_tax_rate );?></li><?php
 	}
 }
 add_action('pmpro_invoice_bullets_bottom', 'pmprovat_pmpro_invoice_bullets_bottom');
@@ -918,10 +936,10 @@ function pmprovat_pmpro_apply_vat_to_level($level, $vat_rate)
 
 function pmprovat_init_load_session_vars($params)
 {
-	if(empty($_REQUEST['vat_number_verified']) && !empty($_SESSION['vat_number_verified']))
+	if(empty($_REQUEST['vat_number_verified']) && !empty($_SESSION['vat_number_verified'])) // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only check; restores session values saved at checkout.
 	{
-		$_REQUEST['vat_number_verified'] = $_SESSION['vat_number_verified'];
-		$_REQUEST['vat_number'] = $_SESSION['vat_number'];
+		$_REQUEST['vat_number_verified'] = $_SESSION['vat_number_verified']; // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- Stored with intval() in pmprovat_pmpro_checkout_before_processing().
+		$_REQUEST['vat_number'] = $_SESSION['vat_number']; // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotValidated, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- Stored with sanitize_text_field() in pmprovat_pmpro_checkout_before_processing(); consumers sanitize again.
 	}
 	
 	return $params;
