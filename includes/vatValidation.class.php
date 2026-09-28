@@ -46,7 +46,7 @@ class vatValidation
 			}
 
 			// Strip the country code from the vat number
-			$vatNumber = preg_replace( '/^' . $countryCode . '/', '', $vatNumber) ;
+			$vatNumber = preg_replace( '/^' . preg_quote( $countryCode, '/' ) . '/', '', $vatNumber) ;
 			
 			$rs = $this->_client->checkVat( array('countryCode' => $countryCode, 'vatNumber' => $vatNumber) );
 
@@ -101,7 +101,7 @@ class vatValidation
 				if ( 'log' === $this->_options['debug'] ) {
 					error_log( 'TRACE: ' . $title . "\n" . $body . "\n" );
 				} else {
-					echo '<h2>TRACE: ' . $title . '</h2><pre>' . htmlentities( $body ) . '</pre>';
+					echo '<h2>TRACE: ' . $title . '</h2><pre>' . htmlentities( $body ) . '</pre>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- $title is always a literal string from this class; $body is escaped with htmlentities(). Only runs when debug is explicitly enabled.
 				}
 			}
 		}
