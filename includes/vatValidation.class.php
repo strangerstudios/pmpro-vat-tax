@@ -40,7 +40,7 @@ class vatValidation
 			}
 
 			// Strip the country code from the vat number
-			$vatNumber = preg_replace( '/^' . $countryCode . '/', '', $vatNumber) ;
+			$vatNumber = preg_replace( '/^' . preg_quote( $countryCode, '/' ) . '/', '', $vatNumber) ;
 			
 			$rs = $this->_client->checkVat( array('countryCode' => $countryCode, 'vatNumber' => $vatNumber) );
 
