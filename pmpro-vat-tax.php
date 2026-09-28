@@ -200,6 +200,7 @@ function pmprovat_getVATValidation() {
 function pmprovat_verify_vat_number($country, $vat_number)
 {
 	// Checkout can verify the same number several times, so cache lookups for this request.
+	// Failed lookups are cached too so that every tax calculation in the request agrees.
 	static $results = array();
 
 	/**
@@ -527,6 +528,7 @@ function pmprovat_pmpro_after_checkout() {
 		unset($_SESSION['bstate']);
 	if(isset($_SESSION['vat_number']))
 		unset($_SESSION['vat_number']);
+	// No longer set. Still cleared for sessions started before the update.
 	if(isset($_SESSION['vat_number_verified']))
 		unset($_SESSION['vat_number_verified']);
 }
