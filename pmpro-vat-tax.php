@@ -203,6 +203,10 @@ function pmprovat_getVATValidation() {
  */
 function pmprovat_verify_vat_number($country, $vat_number)
 {
+	// Checkout can verify the same number several times, so cache lookups for this request.
+	// Failed lookups are cached too so that every tax calculation in the request agrees.
+	static $results = array();
+
 	/**
 	 * Sometimes developers prefer to skip validation
 	 */
@@ -223,12 +227,15 @@ function pmprovat_verify_vat_number($country, $vat_number)
 	/**
 	 * Validation of any other country
 	 */
-	$vatValidation = pmprovat_getVATValidation();
-		
 	if(empty($country) || empty($vat_number)) {
 		$result = false;
 	} else {
-		$result = $vatValidation->check($country, $vat_number);
+		$cache_key = $country . '|' . $vat_number;
+		if ( ! isset( $results[ $cache_key ] ) ) {
+			$vatValidation = pmprovat_getVATValidation();
+			$results[ $cache_key ] = $vatValidation->check($country, $vat_number);
+		}
+		$result = $results[ $cache_key ];
 	}
 
 	$result = apply_filters('pmprovat_custom_vat_number_validate', $result);
@@ -481,24 +488,16 @@ function pmprovat_pmpro_tax($tax, $values, $order)
 		$bstate = '';
 
 	$vat_rate = 0;	//default to 0
-	
-	//check for vat number, validate if needed, set tax rate
-	if(!empty($_REQUEST['vat_number_verified']) && $_REQUEST['vat_number_verified'] == "1") {
-		$vat_number_verified = true;		
-	} elseif(!empty($_SESSION['vat_number_verified']) && $_SESSION['vat_number_verified'] == "1") {
-		$vat_number_verified = true;		
-	} else {
-		$vat_number_verified = false;
-		//they didn't use AJAX verify. Verify them now.
-		if(!empty($vat_number) && !empty($eucountry) && pmprovat_verify_vat_number($eucountry, $vat_number))
-		{
-			$vat_rate = 0;
-		}
-		//they don't have a VAT number.
-		elseif(!empty($eucountry) && array_key_exists($eucountry, $pmpro_vat_by_country))
-		{			
-			$vat_rate = pmprovat_getTaxRate($eucountry, $bstate);		
-		}
+
+	//always verify the VAT number here. Don't trust a "verified" flag from the browser.
+	if(!empty($vat_number) && !empty($eucountry) && pmprovat_verify_vat_number($eucountry, $vat_number))
+	{
+		$vat_rate = 0;
+	}
+	//they don't have a verified VAT number.
+	elseif(!empty($eucountry) && array_key_exists($eucountry, $pmpro_vat_by_country))
+	{
+		$vat_rate = pmprovat_getTaxRate($eucountry, $bstate);
 	}
 	// phpcs:enable WordPress.Security.NonceVerification.Recommended
 
@@ -525,8 +524,6 @@ function pmprovat_pmpro_checkout_before_processing() {
 		$_SESSION['show_vat'] = intval($_REQUEST['show_vat']);
 	if(!empty($_REQUEST['vat_number']))
 		$_SESSION['vat_number'] = sanitize_text_field( wp_unslash( $_REQUEST['vat_number'] ) );
-	if(!empty($_REQUEST['vat_number_verified']))
-		$_SESSION['vat_number_verified'] = intval($_REQUEST['vat_number_verified']);
 	// phpcs:enable WordPress.Security.NonceVerification.Recommended
 }
 add_action('pmpro_checkout_before_processing', 'pmprovat_pmpro_checkout_before_processing');
@@ -545,6 +542,7 @@ function pmprovat_pmpro_after_checkout() {
 		unset($_SESSION['bstate']);
 	if(isset($_SESSION['vat_number']))
 		unset($_SESSION['vat_number']);
+	// No longer set. Still cleared for sessions started before the update.
 	if(isset($_SESSION['vat_number_verified']))
 		unset($_SESSION['vat_number_verified']);
 }
@@ -733,24 +731,16 @@ function pmprovat_pmpro_added_order($order)
 			$bstate = '';
 		
 		$vat_rate = 0;	//default to 0
-		
-		//check for vat number, validate if needed, set tax rate
-		if(!empty($_REQUEST['vat_number_verified']) && $_REQUEST['vat_number_verified'] == "1") {
-			$vat_number_verified = true;		
-		} elseif(!empty($_SESSION['vat_number_verified']) && $_SESSION['vat_number_verified'] == "1") {
-			$vat_number_verified = true;		
-		} else {
-			$vat_number_verified = false;
-			//they didn't use AJAX verify. Verify them now.
-			if(!empty($vat_number) && !empty($eucountry) && pmprovat_verify_vat_number($eucountry, $vat_number))
-			{
-				$vat_rate = 0;
-			}
-			//they don't have a VAT number.
-			elseif(!empty($eucountry) && array_key_exists($eucountry, $pmpro_european_union))
-			{			
-				$vat_rate = pmprovat_getTaxRate($eucountry, $bstate);		
-			}
+
+		//always verify the VAT number here. Don't trust a "verified" flag from the browser.
+		if(!empty($vat_number) && !empty($eucountry) && pmprovat_verify_vat_number($eucountry, $vat_number))
+		{
+			$vat_rate = 0;
+		}
+		//they don't have a verified VAT number.
+		elseif(!empty($eucountry) && array_key_exists($eucountry, $pmpro_european_union))
+		{
+			$vat_rate = pmprovat_getTaxRate($eucountry, $bstate);
 		}
 		// phpcs:enable WordPress.Security.NonceVerification.Recommended
 	}
@@ -933,20 +923,6 @@ function pmprovat_pmpro_apply_vat_to_level($level, $vat_rate)
 	
 	return $level;
 }
-
-function pmprovat_init_load_session_vars($params)
-{
-	if(empty($_REQUEST['vat_number_verified']) && !empty($_SESSION['vat_number_verified'])) // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only check; restores session values saved at checkout.
-	{
-		$_REQUEST['vat_number_verified'] = $_SESSION['vat_number_verified']; // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- Stored with intval() in pmprovat_pmpro_checkout_before_processing().
-		$_REQUEST['vat_number'] = $_SESSION['vat_number']; // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotValidated, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- Stored with sanitize_text_field() in pmprovat_pmpro_checkout_before_processing(); consumers sanitize again.
-	}
-	
-	return $params;
-}
-
-add_action('init', 'pmprovat_init_load_session_vars', 5);
-
 
 function pmprovat_get_tax_order_notes( $value_name, $order ){
 
