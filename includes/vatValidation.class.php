@@ -33,6 +33,12 @@ class vatValidation
 		$this->_valid = false;
 		$this->_data = array();
 
+		// The SOAP client couldn't be created, e.g. VIES was unreachable.
+		if ( empty( $this->_client ) ) {
+			$this->_failed = true;
+			return false;
+		}
+
 		try {
 			// Fix this issue for Greece.
 			if ( $countryCode == 'GR' ) {
