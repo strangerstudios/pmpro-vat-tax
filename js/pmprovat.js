@@ -86,13 +86,6 @@ jQuery(document).ready(function(){
 						jQuery('#pmpro_message, #vat_number_message').removeClass('pmpro_error');
 						jQuery('#pmpro_message, #vat_number_message').addClass('pmpro_success');
 						jQuery('#pmpro_message, #vat_number_message').html(pmprovat.verified_text);
-
-						jQuery('<input>').attr({
-							type: 'hidden',
-							id: 'vat_number_verified',
-							name: 'vat_number_verified',
-							value: '1'
-						}).appendTo('#pmpro_form');
 					}
 					else
 					{
@@ -100,8 +93,6 @@ jQuery(document).ready(function(){
 						jQuery('#pmpro_message, #vat_number_message').removeClass('pmpro_success');
 						jQuery('#pmpro_message, #vat_number_message').addClass('pmpro_error');
 						jQuery('#pmpro_message, #vat_number_message').html(pmprovat.not_verified_text);
-
-						jQuery('#pmpro_form #vat_number_verified').remove();
 					}
 				}
 			});
