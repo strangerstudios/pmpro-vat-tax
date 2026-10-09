@@ -32,10 +32,12 @@ jQuery(document).ready(function(){
 			if(jQuery('#eucountry').val() == '' && jQuery('select[name=bcountry]').val() != '')
 				jQuery('#eucountry').val( country );
 			
-			if(pmprovat.seller_country == country && pmprovat.hide_vat_same_country)
+			if(pmprovat.seller_country == country && pmprovat.hide_vat_same_country) {
 				jQuery('#vat_have_number').hide();
-			else
+				jQuery('#show_vat').prop('checked', false);
+			} else {
 				jQuery('#vat_have_number').show();
+			}
 		
 			if(country_by_ip == country)
 				jQuery('#vat_confirm_country').hide();
