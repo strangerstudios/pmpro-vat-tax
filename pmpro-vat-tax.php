@@ -80,7 +80,7 @@ function pmprovat_init()
 	//Identify EU countries. Uses ISO country designations
 	global $pmpro_european_union;
 	$pmpro_european_union = array(""	 => __( "- Choose One -" , 'pmpro-vat-tax' ),
-							"NOTEU" => __( "Non-EU Resident" , 'pmpro-vat-tax' ),
+							"NOTEU" => __( "Other Country" , 'pmpro-vat-tax' ),
 							"AT"  => __( "Austria" , 'pmpro-vat-tax' ),
 							"BE"  => __( "Belgium" , 'pmpro-vat-tax' ),
 							"BG"  => __( "Bulgaria" , 'pmpro-vat-tax' ),
@@ -250,7 +250,7 @@ function pmprovat_pmpro_level_cost_text($cost, $level)
 {
 	global $pmpro_pages;
 	if( is_page( $pmpro_pages["checkout"] ) && !pmpro_isLevelFree($level) )
-		$cost .= " " . __("Members in the EU will be charged a VAT tax.", "pmpro-vat-tax");
+		$cost .= " " . __("VAT may be charged based on your country of residence.", "pmpro-vat-tax");
 
 	return $cost;
 }
@@ -298,7 +298,7 @@ function pmprovat_pmpro_checkout_boxes() {
 	<div class="<?php echo esc_attr( pmpro_get_element_class( 'pmpro_card' ) ); ?>">
 		<div class="<?php echo esc_attr( pmpro_get_element_class( 'pmpro_card_content' ) ); ?>">
 			<legend class="<?php echo esc_attr( pmpro_get_element_class( 'pmpro_form_legend' ) ); ?>">
-				<h2 class="<?php echo esc_attr( pmpro_get_element_class( 'pmpro_form_heading pmpro_font-large' ) ); ?>"><?php esc_html_e( 'European Union Residents VAT', 'pmpro-vat-tax' );?></h2>
+				<h2 class="<?php echo esc_attr( pmpro_get_element_class( 'pmpro_form_heading pmpro_font-large' ) ); ?>"><?php esc_html_e( 'VAT Information', 'pmpro-vat-tax' );?></h2>
 			</legend> <!-- end pmpro_form_legend -->
 			<div class="<?php echo esc_attr( pmpro_get_element_class( 'pmpro_form_fields' ) ); ?>">
 				<div class="<?php echo esc_attr( pmpro_get_element_class( 'pmpro_form_field pmpro_form_field-select pmpro_form_field-eucountry', 'pmpro_form_field-eucountry' ) );?>">
@@ -311,7 +311,7 @@ function pmprovat_pmpro_checkout_boxes() {
 								}
 							?>
 						</select>
-						<p id="eu_self_id_instructions" class="<?php echo esc_attr( pmpro_get_element_class( 'pmpro_form_hint', 'eu_self_id_instructions' ) );?>"><?php esc_html_e( 'EU customers must confirm country of residence for VAT.', 'pmpro-vat-tax' );?></p>
+						<p id="eu_self_id_instructions" class="<?php echo esc_attr( pmpro_get_element_class( 'pmpro_form_hint', 'eu_self_id_instructions' ) );?>"><?php esc_html_e( 'Please confirm your country of residence for VAT.', 'pmpro-vat-tax' );?></p>
 					<?php } elseif ( ! empty( $eucountry ) ) { ?>
 						<span><?php echo esc_html( $pmpro_european_union[$eucountry] ); ?></span>
 					<?php } ?>
@@ -585,7 +585,7 @@ function pmprovat_pmpro_payment_option_fields($payment_option_values, $gateway)
 	?>
 			<tr class="pmpro_settings_divider">
 				<td colspan="2">
-					<?php esc_html_e('EU VAT Seller Country', 'pmpro-vat-tax' ); ?>
+					<?php esc_html_e('VAT Seller Country', 'pmpro-vat-tax' ); ?>
 				</td>
 			</tr>
 			
@@ -632,7 +632,7 @@ function pmprovat_pmpro_after_payment_settings() {
 		<tbody>
 			<tr class="pmpro_settings_divider">
 				<td colspan="2">
-					<?php esc_html_e('EU VAT Seller Country', 'pmpro-vat-tax' ); ?>
+					<?php esc_html_e('VAT Seller Country', 'pmpro-vat-tax' ); ?>
 				</td>
 			</tr>
 			
