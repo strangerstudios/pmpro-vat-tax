@@ -249,7 +249,7 @@ function pmprovat_verify_vat_number($country, $vat_number)
 function pmprovat_pmpro_level_cost_text($cost, $level)
 {
 	global $pmpro_pages;
-	if( is_page( $pmpro_pages["checkout"] ) && !pmpro_isLevelFree($level) )
+	if( !empty( $pmpro_pages["checkout"] ) && is_page( $pmpro_pages["checkout"] ) && !pmpro_isLevelFree($level) )
 		$cost .= " " . __("Members in the EU will be charged a VAT tax.", "pmpro-vat-tax");
 
 	return $cost;
