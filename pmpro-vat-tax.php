@@ -80,7 +80,7 @@ function pmprovat_init()
 	//Identify EU countries. Uses ISO country designations
 	global $pmpro_european_union;
 	$pmpro_european_union = array(""	 => __( "- Choose One -" , 'pmpro-vat-tax' ),
-							"NOTEU" => __( "Other Country" , 'pmpro-vat-tax' ),
+							"NOTEU" => __( "Outside the EU and UK" , 'pmpro-vat-tax' ),
 							"AT"  => __( "Austria" , 'pmpro-vat-tax' ),
 							"BE"  => __( "Belgium" , 'pmpro-vat-tax' ),
 							"BG"  => __( "Bulgaria" , 'pmpro-vat-tax' ),
