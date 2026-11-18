@@ -248,8 +248,7 @@ function pmprovat_verify_vat_number($country, $vat_number)
  */
 function pmprovat_pmpro_level_cost_text($cost, $level)
 {
-	global $pmpro_pages;
-	if( is_page( $pmpro_pages["checkout"] ) && !pmpro_isLevelFree($level) )
+	if( pmpro_is_checkout() && !pmpro_isLevelFree($level) )
 		$cost .= " " . __("VAT may be charged based on your country of residence.", "pmpro-vat-tax");
 
 	return $cost;
