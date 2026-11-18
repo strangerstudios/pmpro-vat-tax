@@ -3,7 +3,7 @@ Contributors: strangerstudios
 Tags: paid memberships pro, pmpro, tax, vat, eu
 Requires at least: 5.0
 Tested up to: 7.1
-Stable tag: 0.8.6
+Stable tag: 0.8.7
 
 Calculate VAT tax at checkout and allow customers with a VAT Number to avoid the tax.
 
@@ -34,6 +34,12 @@ For immediate help, also post to our premium support site at http://www.paidmemb
 Please visit our premium support site at http://www.paidmembershipspro.com for more documentation and our support forums.
 
 == Changelog ==
+= 0.8.7 - 2026-11-18 =
+* ENHANCEMENT: Updated VAT checkout and settings text to no longer refer only to the EU, since the United Kingdom is also supported. #84 (@dparker1005)
+* BUG FIX: Fixed an issue where a VAT number from an abandoned or failed checkout could be applied to a later checkout. VAT checkout fields are no longer stored in the PHP session, so offsite gateways now require PMPro 2.12.3+ to restore them. #82 (@dparker1005)
+* BUG FIX: The "I have a VAT number" checkbox and VAT Number field are now hidden and cleared when the billing country is the seller's country. #83 (@dparker1005)
+* BUG FIX: Fixed the VAT notice being added to level costs on every page when no Checkout page is set. The notice now uses PMPro's checkout page detection. #85 (@dparker1005)
+
 = 0.8.6 - 2026-09-28 =
 * SECURITY: VAT numbers are now always verified on the server before the VAT exemption is applied at checkout. #80 (@dparker1005)
 * SECURITY: The EU VAT seller country setting is now only saved on a nonce-verified Payment Settings save. #79 (@dparker1005)
