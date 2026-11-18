@@ -271,24 +271,18 @@ function pmprovat_pmpro_checkout_boxes() {
 	// phpcs:disable WordPress.Security.NonceVerification.Recommended -- Read-only: repopulates the checkout form fields.
 	if ( ! empty( $_REQUEST['eucountry'] ) ) {
 		$eucountry = sanitize_text_field( wp_unslash( $_REQUEST['eucountry'] ) );
-	} elseif ( ! empty( $_SESSION['eucountry'] ) ) {
-		$eucountry = sanitize_text_field( $_SESSION['eucountry'] );
 	} else {
 		$eucountry = "";
 	}
 	
 	if ( ! empty( $_REQUEST['show_vat'] ) ) {
 		$show_vat = sanitize_text_field( wp_unslash( $_REQUEST['show_vat'] ) );
-	} elseif ( ! empty( $_SESSION['show_vat'] ) ) {
-		$show_vat = sanitize_text_field( $_SESSION['show_vat'] );
 	} else {
 		$show_vat = "";
 	}
 	
 	if ( ! empty( $_REQUEST['vat_number'] ) ) {
 		$vat_number = sanitize_text_field( wp_unslash( $_REQUEST['vat_number'] ) );
-	} elseif ( ! empty( $_SESSION['vat_number'] ) ) {
-		$vat_number = sanitize_text_field( $_SESSION['vat_number'] );
 	} else {
 		$vat_number = "";
 	}
@@ -384,22 +378,16 @@ function pmprovat_check_vat_fields_submission($value)
 	// phpcs:disable WordPress.Security.NonceVerification.Recommended -- Runs on pmpro_registration_checks; PMPro core verifies the checkout nonce before this filter.
 	if(!empty($_REQUEST['bcountry']))
 		$bcountry = sanitize_text_field( wp_unslash( $_REQUEST['bcountry'] ) );
-	elseif(!empty($_SESSION['bcountry']))
-		$bcountry = sanitize_text_field($_SESSION['bcountry']);
 	else
 		$bcountry = "";
 
 	if(!empty($_REQUEST['eucountry']))
 		$eucountry = sanitize_text_field( wp_unslash( $_REQUEST['eucountry'] ) );
-	elseif(!empty($_SESSION['eucountry']))
-		$eucountry = sanitize_text_field($_SESSION['eucountry']);
 	else
 		$eucountry = "";
 
 	if(!empty($_REQUEST['vat_number']))
 		$vat_number = sanitize_text_field( wp_unslash( $_REQUEST['vat_number'] ) );
-	elseif(!empty($_SESSION['vat_number']))
-		$vat_number = sanitize_text_field($_SESSION['vat_number']);
 	else
 		$vat_number = "";
 	
@@ -463,8 +451,6 @@ function pmprovat_pmpro_tax($tax, $values, $order)
 	// phpcs:disable WordPress.Security.NonceVerification.Recommended -- Read-only: calculates tax from the checkout values; PMPro core verifies the checkout nonce before processing.
 	if(!empty($_REQUEST['vat_number']))
 		$vat_number = sanitize_text_field( wp_unslash( $_REQUEST['vat_number'] ) );
-	elseif(!empty($_SESSION['vat_number']))
-		$vat_number = sanitize_text_field($_SESSION['vat_number']);
 	else
 		$vat_number = "";
 
@@ -473,8 +459,6 @@ function pmprovat_pmpro_tax($tax, $values, $order)
 		$eucountry = $values['billing_country'];	
 	elseif(!empty($_REQUEST['eucountry']))
 		$eucountry = sanitize_text_field( wp_unslash( $_REQUEST['eucountry'] ) );		//but you might have an eucountry set with no billing country
-	elseif(!empty($_SESSION['eucountry']))
-		$eucountry = sanitize_text_field($_SESSION['eucountry']);		//ditto if you store in a session to go offsite
 	else
 		$eucountry = "";
 
@@ -482,8 +466,6 @@ function pmprovat_pmpro_tax($tax, $values, $order)
 		$bstate = $values['billing_state'];
 	elseif(!empty($_REQUEST['bstate']))
 		$bstate = sanitize_text_field( wp_unslash( $_REQUEST['bstate'] ) );
-	elseif(!empty($_SESSION['bstate']))
-		$bstate = sanitize_text_field($_SESSION['bstate']);
 	else
 		$bstate = '';
 
@@ -510,26 +492,8 @@ function pmprovat_pmpro_tax($tax, $values, $order)
 add_filter("pmpro_tax", "pmprovat_pmpro_tax", 10, 3);
 
 /**
- * Save VAT to Session when going to an offsite gateway.
- */
-function pmprovat_pmpro_checkout_before_processing() {
-	// phpcs:disable WordPress.Security.NonceVerification.Recommended -- Runs on pmpro_checkout_before_processing; PMPro core verifies the checkout nonce before this action.
-	if(!empty($_REQUEST['eucountry']))
-		$_SESSION['eucountry'] = sanitize_text_field( wp_unslash( $_REQUEST['eucountry'] ) );
-	if(!empty($_REQUEST['bcountry']))
-		$_SESSION['bcountry'] = sanitize_text_field( wp_unslash( $_REQUEST['bcountry'] ) );
-	if(!empty($_REQUEST['bstate']))
-		$_SESSION['bstate'] = sanitize_text_field( wp_unslash( $_REQUEST['bstate'] ) );
-	if(!empty($_REQUEST['show_vat']))
-		$_SESSION['show_vat'] = intval($_REQUEST['show_vat']);
-	if(!empty($_REQUEST['vat_number']))
-		$_SESSION['vat_number'] = sanitize_text_field( wp_unslash( $_REQUEST['vat_number'] ) );
-	// phpcs:enable WordPress.Security.NonceVerification.Recommended
-}
-add_action('pmpro_checkout_before_processing', 'pmprovat_pmpro_checkout_before_processing');
-
-/**
- * Remove the session vars on checkout
+ * Remove the session vars on checkout.
+ * No longer set. Still cleared for sessions started before the update.
  */
 function pmprovat_pmpro_after_checkout() {		
 	if(isset($_SESSION['eucountry']))
@@ -542,7 +506,6 @@ function pmprovat_pmpro_after_checkout() {
 		unset($_SESSION['bstate']);
 	if(isset($_SESSION['vat_number']))
 		unset($_SESSION['vat_number']);
-	// No longer set. Still cleared for sessions started before the update.
 	if(isset($_SESSION['vat_number_verified']))
 		unset($_SESSION['vat_number_verified']);
 }
@@ -700,8 +663,6 @@ function pmprovat_pmpro_added_order($order)
 		// phpcs:disable WordPress.Security.NonceVerification.Recommended -- Reads the checkout values for the order just created; PMPro core verifies the checkout nonce before creating the order.
 		if(!empty($_REQUEST['vat_number']))
 			$vat_number = sanitize_text_field( wp_unslash( $_REQUEST['vat_number'] ) );
-		elseif(!empty($_SESSION['vat_number']))
-			$vat_number = sanitize_text_field($_SESSION['vat_number']);
 		else
 			$vat_number = '';
 		
@@ -710,12 +671,8 @@ function pmprovat_pmpro_added_order($order)
 			$eucountry = $order->billing->country;
 		elseif(!empty($_REQUEST['bcountry']))
 			$eucountry = sanitize_text_field( wp_unslash( $_REQUEST['bcountry'] ) );
-		elseif(!empty($_SESSION['bcountry']))
-			$eucountry = sanitize_text_field($_SESSION['bcountry']);
 		elseif(!empty($_REQUEST['eucountry']))
 			$eucountry = sanitize_text_field( wp_unslash( $_REQUEST['eucountry'] ) );
-		elseif(!empty($_SESSION['eucountry']))
-			$eucountry = sanitize_text_field($_SESSION['eucountry']);
 		else
 			$eucountry = '';
 		
@@ -725,8 +682,6 @@ function pmprovat_pmpro_added_order($order)
 		
 		if(!empty($_REQUEST['bstate']))
 			$bstate = sanitize_text_field( wp_unslash( $_REQUEST['bstate'] ) );
-		elseif(!empty($_SESSION['bstate']))
-			$bstate = sanitize_text_field($_SESSION['bstate']);
 		else
 			$bstate = '';
 		
