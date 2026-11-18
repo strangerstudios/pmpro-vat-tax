@@ -9,7 +9,7 @@ Calculate VAT tax at checkout and allow customers with a VAT Number to avoid the
 
 == Description ==
 
-This plugin adds a new section on the Membership Checkout form titled "European Union Residents VAT". The customer can select their EU country of residence from a drop-down box or enter their VAT number to avoid the tax. The entered VAT number is validated using the SOAP service provided through the European Commission (http://ec.europa.eu/taxation_customs/vies/technicalInformation.html).
+This plugin adds a new section on the Membership Checkout form titled "VAT Information". The customer can select their country of residence from a drop-down box or enter their VAT number to avoid the tax. The entered VAT number is validated using the SOAP service provided through the European Commission (http://ec.europa.eu/taxation_customs/vies/technicalInformation.html).
 
 VAT rates are automatically calculated based on the constant rates defined in the plugin. The rates in our plugin are those currently listed by the European Commission (http://ec.europa.eu/taxation_customs/index_en.htm)
 
