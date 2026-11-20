@@ -468,6 +468,11 @@ function pmprovat_pmpro_tax($tax, $values, $order)
 	else
 		$bstate = '';
 
+	// Ignore the VAT number if the "I have a VAT number" box wasn't checked or the customer is in the seller's country.
+	if ( empty( $_REQUEST['show_vat'] ) || ( $eucountry === get_option( 'pmprovt_seller_country' ) && apply_filters( 'pmprovat_hide_vat_if_same_country', true ) ) ) {
+		$vat_number = '';
+	}
+
 	$vat_rate = 0;	//default to 0
 
 	//always verify the VAT number here. Don't trust a "verified" flag from the browser.
@@ -678,6 +683,11 @@ function pmprovat_pmpro_added_order($order)
 		//if country is not in EU, blank it out
 		if(!empty($eucountry) && ($eucountry == 'NOTEU' || !array_key_exists($eucountry, $pmpro_european_union)))
 			$eucountry = "";
+
+		// Ignore the VAT number if the "I have a VAT number" box wasn't checked or the customer is in the seller's country.
+		if ( empty( $_REQUEST['show_vat'] ) || ( $eucountry === get_option( 'pmprovt_seller_country' ) && apply_filters( 'pmprovat_hide_vat_if_same_country', true ) ) ) {
+			$vat_number = '';
+		}
 		
 		if(!empty($_REQUEST['bstate']))
 			$bstate = sanitize_text_field( wp_unslash( $_REQUEST['bstate'] ) );
