@@ -169,8 +169,8 @@ function pmprovat_enqueue_scripts() {
 				'ajaxurl' => admin_url('admin-ajax.php'),
 				'timeout' => apply_filters("pmpro_ajax_timeout", 5000, 'applydiscountcode'),
 				'seller_country' => get_option('pmprovt_seller_country'),
-				'verified_text' => __('VAT number was verifed', 'pmpro-vat-tax'),
-				'not_verified_text' => __('VAT number was not verifed. Please try again.', 'pmpro-vat-tax'),				
+				'verified_text' => __('VAT number was verified', 'pmpro-vat-tax'),
+				'not_verified_text' => __('VAT number was not verified. Please try again.', 'pmpro-vat-tax'),				
 				'hide_vat_same_country' => apply_filters( 'pmprovat_hide_vat_if_same_country', true ),
 			)
 		);
@@ -422,7 +422,7 @@ function pmprovat_check_vat_fields_submission($value)
 	//actually hit "Apply". If it verifies, go through with checkout
 	//otherwise, assume they made a mistake and stop the checkout
 	} elseif($show_vat && !pmprovat_verify_vat_number($eucountry, $vat_number)) {
-		$pmpro_msg = __( "VAT number was not verifed. Please try again.",  'pmpro-vat-tax' );
+		$pmpro_msg = __( "VAT number was not verified. Please try again.",  'pmpro-vat-tax' );
 		$pmpro_msgt = "pmpro_error";
 		$value = false;
 	} elseif(!empty($bcountry) && array_key_exists($bcountry, $pmpro_european_union)) { //only if billing country is an EU country
