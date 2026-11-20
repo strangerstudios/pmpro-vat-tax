@@ -782,7 +782,7 @@ function pmprovat_pmpro_order_single_meta( $pmpro_order_single_meta, $pmpro_invo
 
 	// Add VAT rate to the Bill to section.
 	/* translators: %s: VAT Rate */
-	$vat_information .= ! empty( $vat_tax_rate ) ? '<br />' . sprintf( esc_html__( 'VAT Rate: %s', 'pmpro-vat-tax' ), esc_html( $vat_tax_rate ) ) : '';
+	$vat_information .= ! empty( $vat_tax_rate ) ? '<br />' . sprintf( esc_html__( 'VAT Rate: %s', 'pmpro-vat-tax' ), esc_html( round( (float) $vat_tax_rate * 100, 2 ) . '%' ) ) : '';
 
 	// Add VAT information to the Bill to section.
 	$pmpro_order_single_meta['bill_to']['value'] .= $vat_information;
@@ -812,7 +812,7 @@ function pmprovat_pmpro_invoice_bullets_bottom( $pmpro_invoice ) {
 		?><li><strong><?php esc_html_e('VAT Country: ', 'pmpro-vat-tax');?></strong><?php echo esc_html( pmprovat_iso2vat($vat_country) );?></li><?php
 	}
 	if(!empty($vat_tax_rate)) {
-		?><li><strong><?php esc_html_e('VAT Tax Rate: ', 'pmpro-vat-tax');?></strong><?php echo esc_html( $vat_tax_rate );?></li><?php
+		?><li><strong><?php esc_html_e('VAT Tax Rate: ', 'pmpro-vat-tax');?></strong><?php echo esc_html( round( (float) $vat_tax_rate * 100, 2 ) . '%' );?></li><?php
 	}
 }
 add_action('pmpro_invoice_bullets_bottom', 'pmprovat_pmpro_invoice_bullets_bottom');
