@@ -17,8 +17,10 @@ class vatValidation
 			$this->_options[$option] = $value;
 		}
 		
+		// Without SOAP the client stays empty and check() returns false instead of a fatal error at checkout.
 		if(!class_exists('SoapClient')) {
-			throw new Exception('The Soap library has to be installed and enabled');
+			$this->trace('Vat Translation Error', 'The Soap library has to be installed and enabled');
+			return;
 		}
 				
 		try {
